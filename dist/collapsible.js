@@ -52,8 +52,8 @@ ddm.collapsible = (function ($) {
       $element.removeClass('ddm-collapsible ddm-collapsible--open');
       $content.unwrap();
       $head.removeClass('ddm-collapsible__head ddm-collapsible__head--with-arrow');
-      $head.off('.ddm-collapsible');
-      $element.off('.ddm-collapsible');
+      $head.off('.ddm.collapsible');
+      $element.off('.ddm.collapsible');
       $element.removeData('ddm-collapsible-api');
     });
 
