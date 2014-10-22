@@ -1,0 +1,31 @@
+{
+  "name": "ddm-collapsible",
+  "version": "0.0.1",
+  "authors": [
+    "Joshua Stoutenburg <jstoutenburg@deseretdigital.com>"
+  ],
+  "description": "Collapsible component for DDM projects.",
+  "main": [
+    "dist/collapsible.js",
+    "dist/collapsible.css"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "ui",
+    "collapsible",
+    "ddm"
+  ],
+  "license": "MIT",
+  "homepage": "http://github.com/deseretdigital-ui/ddm-collapsible",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src"
+  ],
+  "dependencies": {
+    "jquery": ">=1.7 <3"
+  }
+}

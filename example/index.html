@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <title>DDM Collapsible Example</title>
+  <meta name="description" content="DDM Collapsible Example" />
+
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+
+  <link href="../dist/collapsible.css" rel="stylesheet" />
+  <script src="../dist/collapsible.js"></script>
+
+  <link href="styles.css" rel="stylesheet" />
+  <style>
+    .primary-nav {
+      background-color: #0b162f;
+      color: #fff;
+      width: 320px;
+    }
+
+    .primary-nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 6px 10px;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    a:focus,
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .ddm-collapsible__head {
+      display: block;
+    }
+
+    .ddm-collapsible__head--with-arrow:after {
+      right: 6px;
+    }
+  </style>
+</head>
+<body class="csstransforms">
+  <h1>DDM Collapsible Example</h1>
+  <nav class="primary-nav">
+    <ul>
+      <li class="js-collapsible">
+        <a href="#" class="js-collapsible__head">Parent 1</a>
+        <ul class="js-collapsible__body">
+          <li><a href="#">Item 1.1</a></li>
+          <li><a href="#">Item 1.2</a></li>
+          <li><a href="#">Item 1.3</a></li>
+          <li><a href="#">Item 1.4</a></li>
+          <li><a href="#">Item 1.5</a></li>
+        </ul>
+      </li>
+      <li class="js-collapsible">
+        <a href="#" class="js-collapsible__head">Parent 2</a>
+        <ul class="js-collapsible__body">
+          <li><a href="#">Item 2.1</a></li>
+          <li><a href="#">Item 2.2</a></li>
+          <li><a href="#">Item 2.3</a></li>
+          <li><a href="#">Item 2.4</a></li>
+          <li><a href="#">Item 2.5</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <script>
+  $(function () {
+    var $collapsibles = $('.js-collapsible');
+    $collapsibles.each(function (index, element) {
+      var $element = $(element);
+      ddm.collapsible($element, {
+        'head': '> .js-collapsible__head',
+        'body': '> .js-collapsible__body',
+        'arrow': true
+      });
+    });
+    $collapsibles.on('open.ddm.collapsible', function (event) {
+      $(this).siblings('.ddm-collapsible').trigger('close.ddm.collapsible');
+    });
+  });
+  </script>
+</body>
+</html>

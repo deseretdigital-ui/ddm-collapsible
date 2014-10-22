@@ -1,0 +1,17 @@
+{
+  "name": "ddm-collapsible",
+  "description": "Collapsible component used in Deseret Digital projects.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deseretdigital-ui/ddm-collapsible"
+  },
+  "bugs": {
+    "url": "https://github.com/deseretdigital-ui/ddm-collapsible"
+  },
+  "homepage": "http://github.com/deseretdigital-ui/ddm-collapsible",
+  "devDependencies": {
+    "gulp": "^3.8.8",
+    "gulp-load-plugins": "^0.7.0",
+    "gulp-sass": "^1.0.0"
+  }
+}

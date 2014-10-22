@@ -1,0 +1,41 @@
+.ddm-collapsible__body {
+  overflow: hidden;
+  max-height: 0;
+  -webkit-transition: max-height 0.3s;
+  transition: max-height 0.3s; }
+
+.ddm-collapsible__head {
+  cursor: pointer; }
+
+.ddm-collapsible__head--with-arrow {
+  position: relative;
+  padding-right: 26px; }
+
+.ddm-collapsible__head--with-arrow:after {
+  content: "\25b8";
+  position: absolute;
+  top: 0;
+  right: 0;
+  vertical-align: middle;
+  display: block;
+  height: 100%;
+  width: 20px;
+  text-align: center; }
+
+.ddm-collapsible--open .ddm-collapsible__head--with-arrow:after {
+  content: "\25be"; }
+
+.csstransforms .ddm-collapsible .ddm-collapsible__head--with-arrow:after {
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s; }
+
+.csstransforms .ddm-collapsible--open .ddm-collapsible__head--with-arrow:after {
+  content: "\25b8";
+  /* Safari */
+  -webkit-transform: rotate(90deg);
+  /* Firefox */
+  -moz-transform: rotate(90deg);
+  /* IE */
+  -ms-transform: rotate(90deg);
+  /* Opera */
+  -o-transform: rotate(90deg); }
