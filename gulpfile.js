@@ -26,6 +26,22 @@ gulp.task('static', function () {
 
 
 
+var exampleFiles = [
+  './bower_components/jquery/dist/jquery.min.js',
+  './dist/collapsible.*'
+];
+gulp.task('example', function () {
+  gulp.src(exampleFiles).pipe(gulp.dest('./example'));
+});
+
+
+
+gulp.task('ghpages', ['example'], function () {
+  return gulp.src('./example/**/*').pipe(plugins.ghPages());
+});
+
+
+
 gulp.task('watch', ['default'], function () {
   gulp.watch(scssFiles, ['scss']);
   gulp.watch(staticFiles, ['static']);
