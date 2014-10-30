@@ -25,6 +25,7 @@
     "src"
   ],
   "dependencies": {
-    "jquery": ">=1.7 <3"
+    "jquery": ">=1.7 <3",
+    "react": "0.12"
   }
 }

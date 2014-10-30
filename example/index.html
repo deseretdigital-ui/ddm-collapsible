@@ -71,6 +71,8 @@
         </ul>
       </li>
     </ul>
+
+    <div id="react-example"></div>
   </nav>
 
   <script>
@@ -88,6 +90,42 @@
       $(this).siblings('.ddm-collapsible').trigger('close.ddm.collapsible');
     });
   });
+  </script>
+
+
+  <script src="../bower_components/react/react-with-addons.js"></script>
+  <script src="../bower_components/react/JSXTransformer.js"></script>
+  <script type="text/jsx" src="../src/collapsible.jsx"></script>
+  <script type="text/jsx">
+  React.render(
+    <CollapsibleGroup>
+      <Collapsible>
+        <CollapsibleHead href="http://google.com">Hello World</CollapsibleHead>
+        <CollapsibleBody>
+          <ul>
+            <li>Item 1</li>
+            <li>Item 1</li>
+            <li>Item 1</li>
+            <li>Item 1</li>
+            <li>Item 1</li>
+          </ul>
+        </CollapsibleBody>
+      </Collapsible>
+      <Collapsible>
+        <CollapsibleHead arrow={false}>Hello World</CollapsibleHead>
+        <CollapsibleBody>
+          <ul>
+            <li>Item 1</li>
+            <li>Item 1</li>
+            <li>Item 1</li>
+            <li>Item 1</li>
+            <li>Item 1</li>
+          </ul>
+        </CollapsibleBody>
+      </Collapsible>
+    </CollapsibleGroup>,
+    document.getElementById('react-example')
+  );
   </script>
 </body>
 </html>
