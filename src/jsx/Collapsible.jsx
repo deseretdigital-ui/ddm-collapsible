@@ -16,12 +16,6 @@ var Collapsible = React.createClass({
     }
   },
 
-  componentWillMount: function () {
-    if (this.props.onMount) {
-      this.props.onMount(this);
-    }
-  },
-
   componentDidMount: function () {
     this.setMaxHeight(false);
   },

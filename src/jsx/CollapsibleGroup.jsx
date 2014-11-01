@@ -1,11 +1,5 @@
 var CollapsibleGroup = React.createClass({
 
-  /* private values */
-
-  collapsibles: [],
-
-
-
   /* react hooks */
 
   propTypes: {
@@ -19,9 +13,8 @@ var CollapsibleGroup = React.createClass({
   },
 
   render: function () {
-    console.log(this.props.accordion);
     return (
-      <div className="ddm-collapsible-group" onClick={this.handleClick}>
+      <div className="ddm-collapsible-group">
         {this.renderChildren()}
       </div>
     );
@@ -32,16 +25,7 @@ var CollapsibleGroup = React.createClass({
   /* event handlers */
 
   handleCollapsibleOpen: function (collapsible) {
-    for (var i = 0; i < this.collapsibles.length; i++) {
-      var child = this.collapsibles[i];
-      var isSame = collapsible.props.index === child.props.index;
-      if (isSame) { continue; }
-      child.close();
-    };
-  },
-
-  handleCollapsibleMount: function (collapsible) {
-    this.collapsibles.push(collapsible);
+    this.closeOtherCollapsibles(collapsible);
   },
 
 
@@ -51,6 +35,16 @@ var CollapsibleGroup = React.createClass({
 
 
   /* helpers */
+
+  closeOtherCollapsibles: function (collapsible) {
+    for (var key in this.refs) {
+      var ref = this.refs[key];
+      var isCollapsible = ref.type !== Collapsible.type;
+      var isSame = ref.props.index === collapsible.props.index;
+      if (!isCollapsible || isSame) { continue; }
+      ref.close();
+    }
+  },
 
   renderChildren: function () {
     return React.Children.map(this.props.children, this.renderChild);
@@ -62,7 +56,7 @@ var CollapsibleGroup = React.createClass({
     child = React.addons.cloneWithProps(child, {
       index: index,
       onOpen: this.handleCollapsibleOpen,
-      onMount: this.handleCollapsibleMount
+      ref: 'ddmCollapsible' + index
     });
 
     return child;
