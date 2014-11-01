@@ -25,7 +25,9 @@ var CollapsibleGroup = React.createClass({
   /* event handlers */
 
   handleCollapsibleOpen: function (collapsible) {
-    this.closeOtherCollapsibles(collapsible);
+    if (this.props.accordion) {
+      this.closeOtherCollapsibles(collapsible);
+    }
   },
 
 
