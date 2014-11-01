@@ -45,87 +45,150 @@
       right: 6px;
     }
   </style>
-</head>
-<body class="csstransforms">
-  <h1>DDM Collapsible Example</h1>
-  <nav class="primary-nav">
-    <ul>
-      <li class="js-collapsible">
-        <a href="#" class="js-collapsible__head">Parent 1</a>
-        <ul class="js-collapsible__body">
-          <li><a href="#">Item 1.1</a></li>
-          <li><a href="#">Item 1.2</a></li>
-          <li><a href="#">Item 1.3</a></li>
-          <li><a href="#">Item 1.4</a></li>
-          <li><a href="#">Item 1.5</a></li>
-        </ul>
-      </li>
-      <li class="js-collapsible">
-        <a href="#" class="js-collapsible__head">Parent 2</a>
-        <ul class="js-collapsible__body">
-          <li><a href="#">Item 2.1</a></li>
-          <li><a href="#">Item 2.2</a></li>
-          <li><a href="#">Item 2.3</a></li>
-          <li><a href="#">Item 2.4</a></li>
-          <li><a href="#">Item 2.5</a></li>
-        </ul>
-      </li>
-    </ul>
-
-    <div id="react-example"></div>
-  </nav>
-
-  <script>
-  $(function () {
-    var $collapsibles = $('.js-collapsible');
-    $collapsibles.each(function (index, element) {
-      var $element = $(element);
-      ddm.collapsible($element, {
-        'head': '> .js-collapsible__head',
-        'body': '> .js-collapsible__body',
-        'arrow': true
-      });
-    });
-    $collapsibles.on('open.ddm.collapsible', function (event) {
-      $(this).siblings('.ddm-collapsible').trigger('close.ddm.collapsible');
-    });
-  });
-  </script>
-
 
   <script src="../bower_components/react/react-with-addons.js"></script>
   <script src="../bower_components/react/JSXTransformer.js"></script>
-  <script type="text/jsx" src="../src/collapsible.jsx"></script>
-  <script type="text/jsx">
-  React.render(
-    <CollapsibleGroup>
-      <Collapsible>
-        <CollapsibleHead href="http://google.com">Hello World</CollapsibleHead>
-        <CollapsibleBody>
-          <ul>
-            <li>Item 1</li>
-            <li>Item 1</li>
-            <li>Item 1</li>
-            <li>Item 1</li>
-            <li>Item 1</li>
+  <script type="text/jsx" src="../src/jsx/CollapsibleGroup.jsx"></script>
+  <script type="text/jsx" src="../src/jsx/CollapsibleHead.jsx"></script>
+  <script type="text/jsx" src="../src/jsx/CollapsibleBody.jsx"></script>
+  <script type="text/jsx" src="../src/jsx/Collapsible.jsx"></script>
+</head>
+<body class="csstransforms">
+
+  <h1>Collapsible Examples</h1>
+
+
+  <div class="example">
+    <h1>jQuery Collapsible Example</h1>
+    <nav class="primary-nav">
+      <ul>
+        <li class="js-collapsible">
+          <a href="#" class="js-collapsible__head">Parent 1</a>
+          <ul class="js-collapsible__body">
+            <li><a href="#">Item 1.1</a></li>
+            <li><a href="#">Item 1.2</a></li>
+            <li><a href="#">Item 1.3</a></li>
+            <li><a href="#">Item 1.4</a></li>
+            <li><a href="#">Item 1.5</a></li>
           </ul>
-        </CollapsibleBody>
-      </Collapsible>
-      <Collapsible>
-        <CollapsibleHead arrow={false}>Hello World</CollapsibleHead>
-        <CollapsibleBody>
-          <ul>
-            <li>Item 1</li>
-            <li>Item 1</li>
-            <li>Item 1</li>
-            <li>Item 1</li>
-            <li>Item 1</li>
+        </li>
+        <li class="js-collapsible">
+          <a href="#" class="js-collapsible__head">Parent 2</a>
+          <ul class="js-collapsible__body">
+            <li><a href="#">Item 2.1</a></li>
+            <li><a href="#">Item 2.2</a></li>
+            <li><a href="#">Item 2.3</a></li>
+            <li><a href="#">Item 2.4</a></li>
+            <li><a href="#">Item 2.5</a></li>
           </ul>
-        </CollapsibleBody>
-      </Collapsible>
-    </CollapsibleGroup>,
-    document.getElementById('react-example')
-  );
-  </script>
+        </li>
+      </ul>
+      <script>
+      $(function () {
+        var $collapsibles = $('.js-collapsible');
+        $collapsibles.each(function (index, element) {
+          var $element = $(element);
+          ddm.collapsible($element, {
+            'head': '> .js-collapsible__head',
+            'body': '> .js-collapsible__body',
+            'arrow': true
+          });
+        });
+        $collapsibles.on('open.ddm.collapsible', function (event) {
+          $(this).siblings('.ddm-collapsible').trigger('close.ddm.collapsible');
+        });
+      });
+      </script>
+    </nav>
+  </div>
+
+  <div class="example">
+    <h2>Accordion CollapsibleGroup</h2>
+    <div class="primary-nav">
+      <div id="react-example-1"></div>
+    </div>
+    <script type="text/jsx">
+    React.render(
+      <CollapsibleGroup>
+        <Collapsible>
+          <CollapsibleHead href="http://google.com">Hello World</CollapsibleHead>
+          <CollapsibleBody>
+            <ul>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+            </ul>
+          </CollapsibleBody>
+        </Collapsible>
+        <Collapsible>
+          <CollapsibleHead>Hello World</CollapsibleHead>
+          <CollapsibleBody>
+            <ul>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+            </ul>
+          </CollapsibleBody>
+        </Collapsible>
+      </CollapsibleGroup>,
+      document.getElementById('react-example-1')
+    );
+    </script>
+  </div>
+
+
+  <div class="example">
+    <h2>&lt;CollapsibleGroup accordion={false}&gt;</h2>
+    <div class="primary-nav">
+      <div id="react-example-2"></div>
+    </div>
+    <script type="text/jsx">
+    React.render(
+      <CollapsibleGroup accordion={false}>
+        <Collapsible>
+          <CollapsibleHead href="http://google.com">Hello World</CollapsibleHead>
+          <CollapsibleBody>
+            <ul>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+            </ul>
+          </CollapsibleBody>
+        </Collapsible>
+        <Collapsible>
+          <CollapsibleHead>Hello World</CollapsibleHead>
+          <CollapsibleBody>
+            <ul>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+            </ul>
+          </CollapsibleBody>
+        </Collapsible>
+      </CollapsibleGroup>,
+      document.getElementById('react-example-2')
+    );
+    </script>
+  </div>
+
+
+  <h2>TODO</h2>
+  <ul>
+    <li>CollapsibleGroup open sets default Collapsible state open</li>
+    <li>CollapsibleGroup arrow sets default Collapsible prop arrow</li>
+    <li>Collapsible open state overrides CollapsibleGroup default open</li>
+    <li>Collapsible arrow overrides CollapsibleGroup arrow</li>
+    <li>Collapsible works without CollapsibleGroup</li>
+  </ul>
+
+
 </body>
 </html>
