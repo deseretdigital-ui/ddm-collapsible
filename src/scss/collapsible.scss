@@ -7,26 +7,27 @@
 
 .ddm-collapsible__head {
   cursor: pointer;
-}
-
-.ddm-collapsible__head--with-arrow {
   position: relative;
   padding-right: 26px;
 }
 
-.ddm-collapsible__head--with-arrow:after {
-  content: "\25b8";
+.ddm-collapsible__arrow {
   position: absolute;
   top: 0;
   right: 0;
-  vertical-align: middle;
   display: block;
   height: 100%;
   width: 20px;
   text-align: center;
 }
 
-.ddm-collapsible--open .ddm-collapsible__head--with-arrow:after {
+.ddm-collapsible__arrow:before {
+  content: "\25b8";
+  vertical-align: middle;
+  display: block;
+}
+
+.ddm-collapsible--open .ddm-collapsible__arrow:before {
   content: "\25be";
 }
 
@@ -44,12 +45,12 @@
   -o-transform: rotate($deg);
 }
 
-.csstransforms .ddm-collapsible .ddm-collapsible__head--with-arrow:after {
+.csstransforms .ddm-collapsible__arrow:before {
   -webkit-transition: all .2s;
   transition: all .2s;
 }
 
-.csstransforms .ddm-collapsible--open .ddm-collapsible__head--with-arrow:after {
+.csstransforms .ddm-collapsible--open .ddm-collapsible__arrow:before {
   content: "\25b8";
   @include rotate-collapsible-arrow(90deg);
 }

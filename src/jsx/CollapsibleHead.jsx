@@ -3,50 +3,34 @@ var CollapsibleHead = React.createClass({
   /* react hooks */
 
   propTypes: {
-    href: React.PropTypes.string,
-    arrow: React.PropTypes.bool
+    href: React.PropTypes.string
   },
 
   getDefaultProps: function() {
     return {
-      href: null,
-      arrow: true
+      href: null
     }
   },
 
   render: function () {
+    return (
+      <div className="ddm-collapsible__head">
+        {this.renderChildren()}
+        <span className="ddm-collapsible__arrow"></span>
+      </div>
+    );
+  },
+
+  renderChildren: function () {
     var children;
 
     if (this.props.href) {
-      children = (
-        <a href={this.props.href}>{this.props.children}</a>
-      );
+      children = (<a href={this.props.href}>{this.props.children}</a>);
     } else {
       children = this.props.children;
     }
 
-    return (
-      <div className={this.getClassNames()}>{children}</div>
-    );
-  },
-
-
-
-  /* event handlers */
-
-
-
-  /* methods */
-
-
-
-  /* helpers */
-
-  getClassNames: function () {
-    return React.addons.classSet({
-      'ddm-collapsible__head': true,
-      'ddm-collapsible__head--with-arrow': this.props.arrow
-    });
+    return children;
   }
 
 });

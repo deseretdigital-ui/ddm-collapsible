@@ -3,7 +3,7 @@ var plugins = require('gulp-load-plugins')();
 
 
 
-gulp.task('default', ['scss', 'static']);
+gulp.task('default', ['scss', 'static', 'example']);
 
 
 
@@ -45,4 +45,5 @@ gulp.task('ghpages', ['example'], function () {
 gulp.task('watch', ['default'], function () {
   gulp.watch(scssFiles, ['scss']);
   gulp.watch(staticFiles, ['static']);
+  gulp.watch(exampleFiles, ['example']);
 });
