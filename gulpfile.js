@@ -3,7 +3,7 @@ var plugins = require('gulp-load-plugins')();
 
 
 
-gulp.task('default', ['scss', 'static', 'example']);
+gulp.task('default', ['scss', 'example']);
 
 
 
@@ -16,11 +16,16 @@ gulp.task('scss', function () {
 
 
 
-var staticFiles = [
-  './src/collapsible.js'
+var jsxFiles = [ /* listed in dependency order for concat; TODO use module loading system */
+  './src/jsx/CollapsibleHead.jsx',
+  './src/jsx/CollapsibleBody.jsx',
+  './src/jsx/Collapsible.jsx',
+  './src/jsx/CollapsibleGroup.jsx'
 ];
-gulp.task('static', function () {
-  return gulp.src(staticFiles, { base: './src' })
+gulp.task('jsx', function () {
+  return gulp.src(jsxFiles)
+    .pipe(plugins.react())
+    .pipe(plugins.concat('collapsible.js'))
     .pipe(gulp.dest('./dist'));
 });
 
@@ -28,9 +33,11 @@ gulp.task('static', function () {
 
 var exampleFiles = [
   './bower_components/jquery/dist/jquery.min.js',
-  './dist/collapsible.*'
+  './dist/collapsible.*',
+  './bower_components/react/react-with-addons.min.js',
+  './bower_components/react/JSXTransformer.js'
 ];
-gulp.task('example', function () {
+gulp.task('example', ['scss', 'jsx'], function () {
   gulp.src(exampleFiles).pipe(gulp.dest('./example'));
 });
 
@@ -46,4 +53,5 @@ gulp.task('watch', ['default'], function () {
   gulp.watch(scssFiles, ['scss']);
   gulp.watch(staticFiles, ['static']);
   gulp.watch(exampleFiles, ['example']);
+  gulp.watch(jsxFiles, ['jsx']);
 });
