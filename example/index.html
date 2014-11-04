@@ -183,5 +183,62 @@
     </script>
   </div>
 
+  <div class="example">
+    <h2>Nested Collapsible</h2>
+    <div class="primary-nav">
+      <div id="react-example-6"></div>
+    </div>
+    <script type="text/jsx">
+    React.render(
+      <CollapsibleGroup open={true}>
+        <Collapsible>
+          <CollapsibleHead href="http://google.com">Collapsible Head 1</CollapsibleHead>
+          <CollapsibleBody>
+            <CollapsibleGroup open={true}>
+              <Collapsible>
+                <CollapsibleHead href="http://google.com">Nested Collapsible Head 1</CollapsibleHead>
+                <CollapsibleBody>
+                  <ul>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                  </ul>
+                </CollapsibleBody>
+              </Collapsible>
+              <Collapsible>
+                <CollapsibleHead>Nested Collapsible Head 2</CollapsibleHead>
+                <CollapsibleBody>
+                  <ul>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                  </ul>
+                </CollapsibleBody>
+              </Collapsible>
+            </CollapsibleGroup>
+          </CollapsibleBody>
+        </Collapsible>
+        <Collapsible>
+          <CollapsibleHead>Collapsible Head 2</CollapsibleHead>
+          <CollapsibleBody>
+            <ul>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+            </ul>
+          </CollapsibleBody>
+        </Collapsible>
+      </CollapsibleGroup>,
+      document.getElementById('react-example-6')
+    );
+    </script>
+  </div>
+
 </body>
 </html>

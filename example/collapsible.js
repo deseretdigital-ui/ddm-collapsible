@@ -51,8 +51,10 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   getInitialState: function() {
     return {
+      mounted: false,
       open: false || this.props.open,
-      mounted: false
+      opening: false,
+      closing: false
     }
   },
 
@@ -89,7 +91,16 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   /* methods */
 
   open: function () {
-    this.setState({open: true});
+    this.setState({
+      open: true,
+      opening: true
+    });
+
+    setTimeout(function () {
+      this.setState({
+        opening: false
+      });
+    }.bind(this), 300); /* this is brittle; it assumes the transition duration is .3s */
 
     if (this.props.onOpen) {
       this.props.onOpen(this);
@@ -97,7 +108,16 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   close: function () {
-    this.setState({open: false});
+    this.setState({
+      closing: true
+    });
+
+    setTimeout(function () {
+      this.setState({
+        closing: false,
+        open: false
+      });
+    }.bind(this), 300);
   },
 
   toggle: function () {
@@ -123,7 +143,19 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   setMaxHeight: function () {
     var body = this.refs.body.getDOMNode();
     var child = body.children[0];
-    var maxHeight = (this.state.open) ? child.offsetHeight + 'px' : null;
+    var maxHeight;
+
+    if (this.state.opening || this.state.closing) {
+      /* we need something to transition to or from */
+      maxHeight = child.offsetHeight + 'px';
+    } else if (this.state.open) {
+      /* lest there be nested collapsibles, remove max-height */
+      maxHeight = 'none';
+    } else {
+      /* unset to make closed */
+      maxHeight = null;
+    }
+
     body.style.maxHeight = maxHeight;
   },
 
