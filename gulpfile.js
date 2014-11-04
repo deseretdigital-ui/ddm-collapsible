@@ -38,7 +38,7 @@ var exampleFiles = [
   './bower_components/react/JSXTransformer.js'
 ];
 gulp.task('example', ['scss', 'jsx'], function () {
-  gulp.src(exampleFiles).pipe(gulp.dest('./example'));
+  return gulp.src(exampleFiles).pipe(gulp.dest('./example'));
 });
 
 
