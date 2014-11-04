@@ -1,0 +1,44 @@
+.ddm-collapsible__body {
+  overflow: hidden;
+  max-height: 0; }
+
+.ddm-collapsible--mounted > .ddm-collapsible__body {
+  -webkit-transition: max-height 0.3s;
+  transition: max-height 0.3s; }
+
+.ddm-collapsible__head {
+  cursor: pointer;
+  position: relative;
+  padding-right: 26px; }
+
+.ddm-collapsible__arrow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  height: 100%;
+  width: 20px;
+  text-align: center; }
+
+.ddm-collapsible__arrow:before {
+  content: "\25b8";
+  vertical-align: middle;
+  display: block; }
+
+.ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+  content: "\25be"; }
+
+.csstransforms .ddm-collapsible__arrow:before {
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s; }
+
+.csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+  content: "\25b8";
+  /* Safari */
+  -webkit-transform: rotate(90deg);
+  /* Firefox */
+  -moz-transform: rotate(90deg);
+  /* IE */
+  -ms-transform: rotate(90deg);
+  /* Opera */
+  -o-transform: rotate(90deg); }

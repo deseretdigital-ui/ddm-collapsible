@@ -96,6 +96,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
       opening: true
     });
 
+    /* fake transition end */
     setTimeout(function () {
       this.setState({
         opening: false
@@ -112,6 +113,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
       closing: true
     });
 
+    /* fake transition end */
     setTimeout(function () {
       this.setState({
         closing: false,
