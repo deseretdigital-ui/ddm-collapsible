@@ -1,6 +1,8 @@
 .ddm-collapsible__body {
   overflow: hidden;
-  max-height: 0;
+  max-height: 0; }
+
+.ddm-collapsible--mounted > .ddm-collapsible__body {
   -webkit-transition: max-height 0.3s;
   transition: max-height 0.3s; }
 
@@ -23,14 +25,14 @@
   vertical-align: middle;
   display: block; }
 
-.ddm-collapsible--open .ddm-collapsible__arrow:before {
+.ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
   content: "\25be"; }
 
 .csstransforms .ddm-collapsible__arrow:before {
   -webkit-transition: all 0.2s;
   transition: all 0.2s; }
 
-.csstransforms .ddm-collapsible--open .ddm-collapsible__arrow:before {
+.csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
   content: "\25b8";
   /* Safari */
   -webkit-transform: rotate(90deg);

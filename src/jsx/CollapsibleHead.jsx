@@ -14,7 +14,7 @@ var CollapsibleHead = React.createClass({
 
   render: function () {
     return (
-      <div className="ddm-collapsible__head">
+      <div className="ddm-collapsible__head" onClick={this.props.onClick}>
         {this.renderChildren()}
         <span className="ddm-collapsible__arrow"></span>
       </div>

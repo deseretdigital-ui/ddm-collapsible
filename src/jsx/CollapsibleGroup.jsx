@@ -3,12 +3,14 @@ var CollapsibleGroup = React.createClass({
   /* react hooks */
 
   propTypes: {
-    accordion: React.PropTypes.bool
+    accordion: React.PropTypes.bool,
+    open: React.PropTypes.bool
   },
 
   getDefaultProps: function () {
     return {
-      accordion: true
+      accordion: false,
+      open: false
     }
   },
 
@@ -54,11 +56,12 @@ var CollapsibleGroup = React.createClass({
 
   renderChild: function (child, index) {
     if (child.type !== Collapsible.type) { return child; }
-
     child = React.addons.cloneWithProps(child, {
+      key: 'ddmCollapsible' + index,
+      ref: 'ddmCollapsible' + index,
       index: index,
-      onOpen: this.handleCollapsibleOpen,
-      ref: 'ddmCollapsible' + index
+      open: child.props.open === undefined ? this.props.open : child.props.open,
+      onOpen: this.handleCollapsibleOpen
     });
 
     return child;

@@ -2,22 +2,27 @@ var Collapsible = React.createClass({
 
   /* react hooks */
 
+  getInitialState: function() {
+    return {
+      open: false || this.props.open,
+      mounted: false
+    }
+  },
+
   render: function () {
     return (
-      <div className={this.getClassNames()} onClick={this.handleClick}>
-        {this.props.children}
+      <div className={this.getClassNames()}>
+        {this.renderChildren()}
       </div>
     );
   },
 
-  getInitialState: function() {
-    return {
-      open: false
-    }
-  },
-
   componentDidMount: function () {
-    this.setMaxHeight(false);
+    this.setMaxHeight();
+    setTimeout(function () {
+      this.setState({mounted: true});
+    }.bind(this), 0);
+
   },
 
   componentDidUpdate: function () {
@@ -28,12 +33,8 @@ var Collapsible = React.createClass({
 
   /* event handlers */
 
-  handleClick: function (event) {
-    $target = $(event.target);
-    var isHead = $target.closest('.ddm-collapsible__head').length > 0;
-    if (isHead) {
-      this.toggle();
-    }
+  handleHeadClick: function (event) {
+    this.toggle();
   },
 
 
@@ -67,17 +68,43 @@ var Collapsible = React.createClass({
   getClassNames: function () {
     return React.addons.classSet({
       'ddm-collapsible': true,
+      'ddm-collapsible--mounted': this.state.mounted,
       'ddm-collapsible--open': this.state.open
     });
   },
 
-  getBody: function () {
-    return $(this.getDOMNode()).find('.ddm-collapsible__body');
+  setMaxHeight: function () {
+    var body = this.refs.body.getDOMNode();
+    var child = body.children[0];
+    var maxHeight = (this.state.open) ? child.offsetHeight + 'px' : null;
+    body.style.maxHeight = maxHeight;
   },
 
-  setMaxHeight: function (animate) {
-    var maxHeight = (this.state.open) ? this.getBody().find(':first-child').outerHeight(true) : '';
-    this.getBody().css('max-height', maxHeight);
+  renderChildren: function () {
+    return React.Children.map(this.props.children, this.renderChild);
+  },
+
+  renderChild: function (child, index) {
+    if (child.type === CollapsibleHead.type) {
+      return this.renderHead(child);
+    } else if (child.type === CollapsibleBody.type) {
+      return this.renderBody(child);
+    } else {
+      return child;
+    }
+  },
+
+  renderHead: function (child) {
+    return React.addons.cloneWithProps(child, {
+      ref: 'head',
+      onClick: this.handleHeadClick
+    });
+  },
+
+  renderBody: function (child) {
+    return React.addons.cloneWithProps(child, {
+      ref: 'body'
+    });
   }
 
 });
