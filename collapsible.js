@@ -161,7 +161,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
       body.style.maxHeight = contentHeight;
       setTimeout(function () {
         body.style.maxHeight = '0';
-      }, 0);
+      }, 10);
     } else if (this.state.open) {
       body.style.maxHeight = 'none';
     } else {
