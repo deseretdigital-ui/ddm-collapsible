@@ -3,12 +3,14 @@ var CollapsibleHead = React.createClass({displayName: 'CollapsibleHead',
   /* react hooks */
 
   propTypes: {
-    href: React.PropTypes.string
+    href: React.PropTypes.string,
+    onClick: React.PropTypes.func
   },
 
   getDefaultProps: function() {
     return {
-      href: null
+      href: null,
+      onClick: function () {}
     }
   },
 
@@ -50,6 +52,20 @@ var CollapsibleBody = React.createClass({displayName: 'CollapsibleBody',
 var Collapsible = React.createClass({displayName: 'Collapsible',
 
   /* react hooks */
+
+  propTypes: {
+    open: React.PropTypes.bool,
+    onOpen: React.PropTypes.func,
+    onClose: React.PropTypes.func
+  },
+
+  getDefaultProps: function () {
+    return {
+      open: false,
+      onOpen: null,
+      onClose: null
+    }
+  },
 
   getInitialState: function() {
     return {
@@ -107,6 +123,10 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   close: function () {
     if (!this.state.open) {
       return; /* nothing to do */
+    }
+
+    if (this.props.onClose) {
+      this.props.onClose(this);
     }
 
     this.setState({

@@ -1,11 +1,11 @@
 .ddm-collapsible__body {
   overflow: hidden;
   max-height: 0;
-}
 
-.ddm-collapsible--mounted > .ddm-collapsible__body {
-  -webkit-transition: max-height .3s;
-  transition: max-height .3s;
+  .ddm-collapsible--mounted > & {
+    -webkit-transition: max-height .3s;
+    transition: max-height .3s;
+  }
 }
 
 .ddm-collapsible__head {
@@ -22,38 +22,27 @@
   height: 100%;
   width: 20px;
   text-align: center;
-}
 
-.ddm-collapsible__arrow:before {
-  content: "\25b8";
-  vertical-align: middle;
-  display: block;
-}
+  &:before {
+    content: "\25b8";
+    vertical-align: middle;
+    display: block;
 
-.ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
-  content: "\25be";
-}
+    .csstransforms & {
+      -webkit-transition: all .2s;
+      transition: all .2s;
+    }
 
-@mixin rotate-collapsible-arrow($deg) {
-  /* Safari */
-  -webkit-transform: rotate($deg);
+    .ddm-collapsible--open > .ddm-collapsible__head > & {
+      content: "\25be";
 
-  /* Firefox */
-  -moz-transform: rotate($deg);
-
-  /* IE */
-  -ms-transform: rotate($deg);
-
-  /* Opera */
-  -o-transform: rotate($deg);
-}
-
-.csstransforms .ddm-collapsible__arrow:before {
-  -webkit-transition: all .2s;
-  transition: all .2s;
-}
-
-.csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
-  content: "\25b8";
-  @include rotate-collapsible-arrow(90deg);
+      .csstransforms & {
+        content: "\25b8";
+        -webkit-transform: rotate(90deg); /* Safari */
+        -moz-transform: rotate(90deg); /* Firefox */
+        -ms-transform: rotate(90deg); /* IE */
+        -o-transform: rotate(90deg); /* Opera */
+      }
+    }
+  }
 }

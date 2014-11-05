@@ -2,6 +2,20 @@ var Collapsible = React.createClass({
 
   /* react hooks */
 
+  propTypes: {
+    open: React.PropTypes.bool,
+    onOpen: React.PropTypes.func,
+    onClose: React.PropTypes.func
+  },
+
+  getDefaultProps: function () {
+    return {
+      open: false,
+      onOpen: null,
+      onClose: null
+    }
+  },
+
   getInitialState: function() {
     return {
       mounted: false,
@@ -58,6 +72,10 @@ var Collapsible = React.createClass({
   close: function () {
     if (!this.state.open) {
       return; /* nothing to do */
+    }
+
+    if (this.props.onClose) {
+      this.props.onClose(this);
     }
 
     this.setState({

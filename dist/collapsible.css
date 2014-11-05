@@ -1,10 +1,9 @@
 .ddm-collapsible__body {
   overflow: hidden;
   max-height: 0; }
-
-.ddm-collapsible--mounted > .ddm-collapsible__body {
-  -webkit-transition: max-height 0.3s;
-  transition: max-height 0.3s; }
+  .ddm-collapsible--mounted > .ddm-collapsible__body {
+    -webkit-transition: max-height 0.3s;
+    transition: max-height 0.3s; }
 
 .ddm-collapsible__head {
   cursor: pointer;
@@ -19,26 +18,22 @@
   height: 100%;
   width: 20px;
   text-align: center; }
-
-.ddm-collapsible__arrow:before {
-  content: "\25b8";
-  vertical-align: middle;
-  display: block; }
-
-.ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
-  content: "\25be"; }
-
-.csstransforms .ddm-collapsible__arrow:before {
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s; }
-
-.csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
-  content: "\25b8";
-  /* Safari */
-  -webkit-transform: rotate(90deg);
-  /* Firefox */
-  -moz-transform: rotate(90deg);
-  /* IE */
-  -ms-transform: rotate(90deg);
-  /* Opera */
-  -o-transform: rotate(90deg); }
+  .ddm-collapsible__arrow:before {
+    content: "\25b8";
+    vertical-align: middle;
+    display: block; }
+    .csstransforms .ddm-collapsible__arrow:before {
+      -webkit-transition: all 0.2s;
+      transition: all 0.2s; }
+    .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+      content: "\25be"; }
+      .csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+        content: "\25b8";
+        -webkit-transform: rotate(90deg);
+        /* Safari */
+        -moz-transform: rotate(90deg);
+        /* Firefox */
+        -ms-transform: rotate(90deg);
+        /* IE */
+        -o-transform: rotate(90deg);
+        /* Opera */ }

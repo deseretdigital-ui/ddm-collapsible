@@ -3,12 +3,14 @@ var CollapsibleHead = React.createClass({
   /* react hooks */
 
   propTypes: {
-    href: React.PropTypes.string
+    href: React.PropTypes.string,
+    onClick: React.PropTypes.func
   },
 
   getDefaultProps: function() {
     return {
-      href: null
+      href: null,
+      onClick: function () {}
     }
   },
 
