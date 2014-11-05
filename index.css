@@ -27,3 +27,8 @@ a:hover {
 .ddm-collapsible__head--with-arrow:after {
   right: 6px;
 }
+
+.ddm-collapsible__head {
+  background: #999;
+  border-top: 1px solid #e1e1e1;
+}
