@@ -35,7 +35,9 @@ var exampleFiles = [
   './bower_components/jquery/dist/jquery.min.js',
   './dist/collapsible.*',
   './bower_components/react/react-with-addons.min.js',
-  './bower_components/react/JSXTransformer.js'
+  './bower_components/react/JSXTransformer.js',
+  './bower_components/es5-shim/es5-shim.min.js',
+  './bower_components/es5-shim/es5-sham.min.js'
 ];
 gulp.task('example', ['scss', 'jsx'], function () {
   return gulp.src(exampleFiles).pipe(gulp.dest('./example'));

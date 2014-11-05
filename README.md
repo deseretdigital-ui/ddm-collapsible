@@ -73,3 +73,9 @@ The body of a `Collapsible` component. Expands and collapses using CSS transitio
 #### Props
 
 No props available.
+
+
+## CSS Transform
+
+To enable css transform on the `CollapsibleHead` arrow add the `csstransforms` class to the `html`
+element using a library such as [Modernizr](http://modernizr.com/).
