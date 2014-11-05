@@ -74,8 +74,8 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   },
 
-  componentDidUpdate: function (prevProps, prevState) {
-    this.setMaxHeight(prevState);
+  componentDidUpdate: function () {
+    this.setMaxHeight();
   },
 
 
@@ -134,44 +134,11 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     });
   },
 
-  setMaxHeight: function (prevState) {
+  setMaxHeight: function () {
     var body = this.refs.body.getDOMNode();
     var content = this.refs.body.refs.content.getDOMNode();
     var contentHeight = content.offsetHeight + 'px';
-
-    var opening = false;
-    var closing = false;
-    var open = this.state.open;
-    var closed = !this.state.open;
-
-    if (prevState !== undefined) {
-      opening = prevState.open === false && this.state.open === true;
-      closing = prevState.open === true && this.state.open === false;
-      open = this.state.open && !opening;
-      closed = !this.state.open && !closing;
-    }
-
-    if (open) {
-      console.log('max-height: none');
-      body.style.maxHeight = 'none';
-    } else if (opening) {
-      console.log('max-height: ' + contentHeight);
-      body.style.maxHeight = contentHeight;
-      setTimeout(function () { /* fake transition end */
-        console.log('max-height: none');
-        body.style.maxHeight = 'none';
-      }, 300);
-    } else if (closing) {
-      console.log('max-height: ' + contentHeight);
-      body.style.maxHeight = contentHeight;
-      setTimeout(function () {
-        console.log('max-height: 0');
-        body.style.maxHeight = '0';
-      }, 1);
-    } else if (closed) {
-      console.log('max-height: 0');
-      body.style.maxHeight = '0';
-    }
+    body.style.maxHeight = this.state.open ? contentHeight : '0';
   },
 
   renderChildren: function () {
