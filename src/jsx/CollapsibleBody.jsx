@@ -2,7 +2,9 @@ var CollapsibleBody = React.createClass({
   render: function () {
     return (
       <div className="ddm-collapsible__body">
-        {this.props.children}
+        <div className="ddm-collapsible__content" ref="content">
+          {this.props.children}
+        </div>
       </div>
     );
   }

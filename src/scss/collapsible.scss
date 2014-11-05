@@ -30,6 +30,7 @@
   display: block;
 }
 
+.ddm-collapsible--opening > .ddm-collapsible__head > .ddm-collapsible__arrow:before,
 .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
   content: "\25be";
 }
@@ -53,6 +54,7 @@
   transition: all .2s;
 }
 
+.csstransforms .ddm-collapsible--opening > .ddm-collapsible__head > .ddm-collapsible__arrow:before,
 .csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
   content: "\25b8";
   @include rotate-collapsible-arrow(90deg);

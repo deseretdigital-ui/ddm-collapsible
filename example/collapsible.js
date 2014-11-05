@@ -39,7 +39,9 @@ var CollapsibleBody = React.createClass({displayName: 'CollapsibleBody',
   render: function () {
     return (
       React.createElement("div", {className: "ddm-collapsible__body"}, 
-        this.props.children
+        React.createElement("div", {className: "ddm-collapsible__content", ref: "content"}, 
+          this.props.children
+        )
       )
     );
   }
@@ -52,8 +54,8 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   getInitialState: function() {
     return {
       mounted: false,
-      open: false || this.props.open,
       opening: false,
+      open: false || this.props.open,
       closing: false
     }
   },
@@ -91,35 +93,40 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   /* methods */
 
   open: function () {
-    this.setState({
-      open: true,
-      opening: true
-    });
-
-    /* fake transition end */
-    setTimeout(function () {
-      this.setState({
-        opening: false
-      });
-    }.bind(this), 300); /* this is brittle; it assumes the transition duration is .3s */
+    if (this.state.open || this.state.opening) {
+      return; /* nothing to do */
+    }
 
     if (this.props.onOpen) {
       this.props.onOpen(this);
     }
+
+    this.setState({
+      opening: true
+    }, function () {
+      /* fake transition end */
+      setTimeout(function () {
+        this.setState({
+          open: true,
+          opening: false
+        });
+      }.bind(this), 300);
+    }.bind(this));
   },
 
   close: function () {
-    this.setState({
-      closing: true
-    });
+    if (!this.state.open || this.state.closing) {
+      return; /* nothing to do */
+    }
 
-    /* fake transition end */
-    setTimeout(function () {
+    this.setState({
+      open: false,
+      closing: true
+    }, function () {
       this.setState({
-        closing: false,
-        open: false
+        closing: false
       });
-    }.bind(this), 300);
+    }.bind(this));
   },
 
   toggle: function () {
@@ -138,27 +145,28 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     return React.addons.classSet({
       'ddm-collapsible': true,
       'ddm-collapsible--mounted': this.state.mounted,
-      'ddm-collapsible--open': this.state.open
+      'ddm-collapsible--open': this.state.open,
+      'ddm-collapsible--opening': this.state.opening
     });
   },
 
   setMaxHeight: function () {
     var body = this.refs.body.getDOMNode();
-    var child = body.children[0];
-    var maxHeight;
+    var content = this.refs.body.refs.content.getDOMNode();
+    var contentHeight = content.offsetHeight + 'px';
 
-    if (this.state.opening || this.state.closing) {
-      /* we need something to transition to or from */
-      maxHeight = child.offsetHeight + 'px';
+    if (this.state.opening) {
+      body.style.maxHeight = contentHeight;
+    } else if (this.state.closing) {
+      body.style.maxHeight = contentHeight;
+      setTimeout(function () {
+        body.style.maxHeight = '0';
+      }, 0);
     } else if (this.state.open) {
-      /* lest there be nested collapsibles, remove max-height */
-      maxHeight = 'none';
+      body.style.maxHeight = 'none';
     } else {
-      /* unset to make closed */
-      maxHeight = null;
+      body.style.maxHeight = '0';
     }
-
-    body.style.maxHeight = maxHeight;
   },
 
   renderChildren: function () {
