@@ -5,9 +5,7 @@ var Collapsible = React.createClass({
   getInitialState: function() {
     return {
       mounted: false,
-      opening: false,
-      open: false || this.props.open,
-      closing: false
+      open: false || this.props.open
     }
   },
 
@@ -44,7 +42,7 @@ var Collapsible = React.createClass({
   /* methods */
 
   open: function () {
-    if (this.state.open || this.state.opening) {
+    if (this.state.open) {
       return; /* nothing to do */
     }
 
@@ -53,31 +51,18 @@ var Collapsible = React.createClass({
     }
 
     this.setState({
-      opening: true
-    }, function () {
-      /* fake transition end */
-      setTimeout(function () {
-        this.setState({
-          open: true,
-          opening: false
-        });
-      }.bind(this), 300);
-    }.bind(this));
+      open: true
+    });
   },
 
   close: function () {
-    if (!this.state.open || this.state.closing) {
+    if (!this.state.open) {
       return; /* nothing to do */
     }
 
     this.setState({
-      open: false,
-      closing: true
-    }, function () {
-      this.setState({
-        closing: false
-      });
-    }.bind(this));
+      open: false
+    });
   },
 
   toggle: function () {
@@ -96,8 +81,7 @@ var Collapsible = React.createClass({
     return React.addons.classSet({
       'ddm-collapsible': true,
       'ddm-collapsible--mounted': this.state.mounted,
-      'ddm-collapsible--open': this.state.open,
-      'ddm-collapsible--opening': this.state.opening
+      'ddm-collapsible--open': this.state.open
     });
   },
 
@@ -105,19 +89,7 @@ var Collapsible = React.createClass({
     var body = this.refs.body.getDOMNode();
     var content = this.refs.body.refs.content.getDOMNode();
     var contentHeight = content.offsetHeight + 'px';
-
-    if (this.state.opening) {
-      body.style.maxHeight = contentHeight;
-    } else if (this.state.closing) {
-      body.style.maxHeight = contentHeight;
-      setTimeout(function () {
-        body.style.maxHeight = '0';
-      }, 0);
-    } else if (this.state.open) {
-      body.style.maxHeight = 'none';
-    } else {
-      body.style.maxHeight = '0';
-    }
+    body.style.maxHeight = this.state.open ? contentHeight : '0';
   },
 
   renderChildren: function () {

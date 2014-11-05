@@ -25,14 +25,14 @@
   vertical-align: middle;
   display: block; }
 
-.ddm-collapsible--opening > .ddm-collapsible__head > .ddm-collapsible__arrow:before, .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+.ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
   content: "\25be"; }
 
 .csstransforms .ddm-collapsible__arrow:before {
   -webkit-transition: all 0.2s;
   transition: all 0.2s; }
 
-.csstransforms .ddm-collapsible--opening > .ddm-collapsible__head > .ddm-collapsible__arrow:before, .csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+.csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
   content: "\25b8";
   /* Safari */
   -webkit-transform: rotate(90deg);
