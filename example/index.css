@@ -1,0 +1,34 @@
+.primary-nav {
+  background-color: #0b162f;
+  color: #fff;
+  width: 320px;
+}
+
+.primary-nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 6px 10px;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+a:focus,
+a:hover {
+  text-decoration: underline;
+}
+
+.ddm-collapsible__head {
+  display: block;
+}
+
+.ddm-collapsible__head--with-arrow:after {
+  right: 6px;
+}
+
+.ddm-collapsible__head {
+  background: #999;
+  border-top: 1px solid #e1e1e1;
+}

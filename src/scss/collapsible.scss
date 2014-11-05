@@ -1,55 +1,48 @@
 .ddm-collapsible__body {
   overflow: hidden;
   max-height: 0;
-  -webkit-transition: max-height .3s;
-  transition: max-height .3s;
+
+  .ddm-collapsible--mounted > & {
+    -webkit-transition: max-height .3s;
+    transition: max-height .3s;
+  }
 }
 
 .ddm-collapsible__head {
   cursor: pointer;
-}
-
-.ddm-collapsible__head--with-arrow {
   position: relative;
   padding-right: 26px;
 }
 
-.ddm-collapsible__head--with-arrow:after {
-  content: "\25b8";
+.ddm-collapsible__arrow {
   position: absolute;
   top: 0;
   right: 0;
-  vertical-align: middle;
   display: block;
   height: 100%;
   width: 20px;
   text-align: center;
-}
 
-.ddm-collapsible--open .ddm-collapsible__head--with-arrow:after {
-  content: "\25be";
-}
+  &:before {
+    content: "\25b8";
+    vertical-align: middle;
+    display: block;
 
-@mixin rotate-collapsible-arrow($deg) {
-  /* Safari */
-  -webkit-transform: rotate($deg);
+    .csstransforms & {
+      -webkit-transition: all .2s;
+      transition: all .2s;
+    }
 
-  /* Firefox */
-  -moz-transform: rotate($deg);
+    .ddm-collapsible--open > .ddm-collapsible__head > & {
+      content: "\25be";
 
-  /* IE */
-  -ms-transform: rotate($deg);
-
-  /* Opera */
-  -o-transform: rotate($deg);
-}
-
-.csstransforms .ddm-collapsible .ddm-collapsible__head--with-arrow:after {
-  -webkit-transition: all .2s;
-  transition: all .2s;
-}
-
-.csstransforms .ddm-collapsible--open .ddm-collapsible__head--with-arrow:after {
-  content: "\25b8";
-  @include rotate-collapsible-arrow(90deg);
+      .csstransforms & {
+        content: "\25b8";
+        -webkit-transform: rotate(90deg); /* Safari */
+        -moz-transform: rotate(90deg); /* Firefox */
+        -ms-transform: rotate(90deg); /* IE */
+        -o-transform: rotate(90deg); /* Opera */
+      }
+    }
+  }
 }

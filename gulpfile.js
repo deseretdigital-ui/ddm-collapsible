@@ -3,7 +3,7 @@ var plugins = require('gulp-load-plugins')();
 
 
 
-gulp.task('default', ['scss', 'static']);
+gulp.task('default', ['example']);
 
 
 
@@ -16,11 +16,16 @@ gulp.task('scss', function () {
 
 
 
-var staticFiles = [
-  './src/collapsible.js'
+var jsxFiles = [ /* listed in dependency order for concat; TODO use module loading system */
+  './src/jsx/CollapsibleHead.jsx',
+  './src/jsx/CollapsibleBody.jsx',
+  './src/jsx/Collapsible.jsx',
+  './src/jsx/CollapsibleGroup.jsx'
 ];
-gulp.task('static', function () {
-  return gulp.src(staticFiles, { base: './src' })
+gulp.task('jsx', function () {
+  return gulp.src(jsxFiles)
+    .pipe(plugins.react())
+    .pipe(plugins.concat('collapsible.js'))
     .pipe(gulp.dest('./dist'));
 });
 
@@ -28,10 +33,14 @@ gulp.task('static', function () {
 
 var exampleFiles = [
   './bower_components/jquery/dist/jquery.min.js',
-  './dist/collapsible.*'
+  './dist/collapsible.*',
+  './bower_components/react/react-with-addons.min.js',
+  './bower_components/react/JSXTransformer.js',
+  './bower_components/es5-shim/es5-shim.min.js',
+  './bower_components/es5-shim/es5-sham.min.js'
 ];
-gulp.task('example', function () {
-  gulp.src(exampleFiles).pipe(gulp.dest('./example'));
+gulp.task('example', ['scss', 'jsx'], function () {
+  return gulp.src(exampleFiles).pipe(gulp.dest('./example'));
 });
 
 
@@ -44,5 +53,6 @@ gulp.task('ghpages', ['example'], function () {
 
 gulp.task('watch', ['default'], function () {
   gulp.watch(scssFiles, ['scss']);
-  gulp.watch(staticFiles, ['static']);
+  gulp.watch(jsxFiles, ['jsx']);
+  gulp.watch(exampleFiles, ['example']);
 });
