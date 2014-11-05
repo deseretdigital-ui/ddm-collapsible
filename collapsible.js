@@ -54,9 +54,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   getInitialState: function() {
     return {
       mounted: false,
-      opening: false,
-      open: false || this.props.open,
-      closing: false
+      open: false || this.props.open
     }
   },
 
@@ -76,8 +74,8 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   },
 
-  componentDidUpdate: function () {
-    this.setMaxHeight();
+  componentDidUpdate: function (prevProps, prevState) {
+    this.setMaxHeight(prevState);
   },
 
 
@@ -93,7 +91,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   /* methods */
 
   open: function () {
-    if (this.state.open || this.state.opening) {
+    if (this.state.open) {
       return; /* nothing to do */
     }
 
@@ -102,31 +100,18 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     }
 
     this.setState({
-      opening: true
-    }, function () {
-      /* fake transition end */
-      setTimeout(function () {
-        this.setState({
-          open: true,
-          opening: false
-        });
-      }.bind(this), 300);
-    }.bind(this));
+      open: true
+    });
   },
 
   close: function () {
-    if (!this.state.open || this.state.closing) {
+    if (!this.state.open) {
       return; /* nothing to do */
     }
 
     this.setState({
-      open: false,
-      closing: true
-    }, function () {
-      this.setState({
-        closing: false
-      });
-    }.bind(this));
+      open: false
+    });
   },
 
   toggle: function () {
@@ -145,26 +130,46 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     return React.addons.classSet({
       'ddm-collapsible': true,
       'ddm-collapsible--mounted': this.state.mounted,
-      'ddm-collapsible--open': this.state.open,
-      'ddm-collapsible--opening': this.state.opening
+      'ddm-collapsible--open': this.state.open
     });
   },
 
-  setMaxHeight: function () {
+  setMaxHeight: function (prevState) {
     var body = this.refs.body.getDOMNode();
     var content = this.refs.body.refs.content.getDOMNode();
     var contentHeight = content.offsetHeight + 'px';
 
-    if (this.state.opening) {
+    var opening = false;
+    var closing = false;
+    var open = this.state.open;
+    var closed = !this.state.open;
+
+    if (prevState !== undefined) {
+      opening = prevState.open === false && this.state.open === true;
+      closing = prevState.open === true && this.state.open === false;
+      open = this.state.open && !opening;
+      closed = !this.state.open && !closing;
+    }
+
+    if (open) {
+      console.log('max-height: none');
+      body.style.maxHeight = 'none';
+    } else if (opening) {
+      console.log('max-height: ' + contentHeight);
       body.style.maxHeight = contentHeight;
-    } else if (this.state.closing) {
+      setTimeout(function () { /* fake transition end */
+        console.log('max-height: none');
+        body.style.maxHeight = 'none';
+      }, 300);
+    } else if (closing) {
+      console.log('max-height: ' + contentHeight);
       body.style.maxHeight = contentHeight;
       setTimeout(function () {
+        console.log('max-height: 0');
         body.style.maxHeight = '0';
-      }, 10);
-    } else if (this.state.open) {
-      body.style.maxHeight = 'none';
-    } else {
+      }, 1);
+    } else if (closed) {
+      console.log('max-height: 0');
       body.style.maxHeight = '0';
     }
   },
