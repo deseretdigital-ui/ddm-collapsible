@@ -11,14 +11,13 @@ var Collapsible = React.createClass({
   getDefaultProps: function () {
     return {
       open: false,
-      onOpen: null,
-      onClose: null
+      onOpen: function () {},
+      onClose: function () {}
     }
   },
 
   getInitialState: function() {
     return {
-      mounted: false,
       open: false || this.props.open
     }
   },
@@ -32,11 +31,8 @@ var Collapsible = React.createClass({
   },
 
   componentDidMount: function () {
-    this.setMaxHeight();
-    setTimeout(function () {
-      this.setState({mounted: true});
-    }.bind(this), 0);
-
+    /* need to add --mounted modifier class for transitions */
+    this.forceUpdate();
   },
 
   componentDidUpdate: function () {
@@ -60,9 +56,7 @@ var Collapsible = React.createClass({
       return; /* nothing to do */
     }
 
-    if (this.props.onOpen) {
-      this.props.onOpen(this);
-    }
+    this.props.onOpen(this);
 
     this.setState({
       open: true
@@ -74,9 +68,7 @@ var Collapsible = React.createClass({
       return; /* nothing to do */
     }
 
-    if (this.props.onClose) {
-      this.props.onClose(this);
-    }
+    this.props.onClose(this);
 
     this.setState({
       open: false
@@ -98,7 +90,7 @@ var Collapsible = React.createClass({
   getClassNames: function () {
     return React.addons.classSet({
       'ddm-collapsible': true,
-      'ddm-collapsible--mounted': this.state.mounted,
+      'ddm-collapsible--mounted': this.isMounted(),
       'ddm-collapsible--open': this.state.open
     });
   },
