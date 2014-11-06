@@ -62,8 +62,8 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   getDefaultProps: function () {
     return {
       open: false,
-      onOpen: null,
-      onClose: null
+      onOpen: function () {},
+      onClose: function () {}
     }
   },
 
@@ -111,9 +111,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
       return; /* nothing to do */
     }
 
-    if (this.props.onOpen) {
-      this.props.onOpen(this);
-    }
+    this.props.onOpen(this);
 
     this.setState({
       open: true
@@ -125,9 +123,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
       return; /* nothing to do */
     }
 
-    if (this.props.onClose) {
-      this.props.onClose(this);
-    }
+    this.props.onClose(this);
 
     this.setState({
       open: false
