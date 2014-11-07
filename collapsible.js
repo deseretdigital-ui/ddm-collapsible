@@ -51,8 +51,6 @@ var CollapsibleBody = React.createClass({displayName: 'CollapsibleBody',
 
 var Collapsible = React.createClass({displayName: 'Collapsible',
 
-  /* react hooks */
-
   propTypes: {
     open: React.PropTypes.bool,
     onOpen: React.PropTypes.func,
@@ -82,79 +80,12 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     );
   },
 
-  componentDidMount: function () {
-    this.setMaxHeight();
-    setTimeout(function () {
-      this.setState({mounted: true});
-    }.bind(this), 0);
-
-  },
-
-  componentDidUpdate: function () {
-    this.setMaxHeight();
-  },
-
-
-
-  /* event handlers */
-
-  handleHeadClick: function (event) {
-    this.toggle();
-  },
-
-
-
-  /* methods */
-
-  open: function () {
-    if (this.state.open) {
-      return; /* nothing to do */
-    }
-
-    this.props.onOpen(this);
-
-    this.setState({
-      open: true
-    });
-  },
-
-  close: function () {
-    if (!this.state.open) {
-      return; /* nothing to do */
-    }
-
-    this.props.onClose(this);
-
-    this.setState({
-      open: false
-    });
-  },
-
-  toggle: function () {
-    if (this.state.open) {
-      this.close();
-    } else {
-      this.open();
-    }
-  },
-
-
-
-  /* helpers */
-
   getClassNames: function () {
     return React.addons.classSet({
       'ddm-collapsible': true,
       'ddm-collapsible--mounted': this.state.mounted,
       'ddm-collapsible--open': this.state.open
     });
-  },
-
-  setMaxHeight: function () {
-    var body = this.refs.body.getDOMNode();
-    var content = this.refs.body.refs.content.getDOMNode();
-    var contentHeight = content.offsetHeight + 'px';
-    body.style.maxHeight = this.state.open ? contentHeight : '0';
   },
 
   renderChildren: function () {
@@ -180,8 +111,96 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   renderBody: function (child) {
     return React.addons.cloneWithProps(child, {
-      ref: 'body'
+      ref: 'body',
+      open: this.state.open
     });
+  },
+
+  componentDidMount: function () {
+    this.setMaxHeight();
+    setTimeout(function () {
+      this.setState({mounted: true});
+    }.bind(this), 0);
+
+  },
+
+  componentDidUpdate: function () {
+    this.setMaxHeight();
+  },
+
+  handleHeadClick: function (event) {
+    this.toggle();
+  },
+
+  open: function () {
+    if (this.state.open) {
+      return; /* nothing to do */
+    }
+
+    this.props.onOpen(this);
+    this._open();
+    this.setState({ open: true });
+  },
+
+  close: function () {
+    if (!this.state.open) {
+      return; /* nothing to do */
+    }
+
+    this.props.onClose(this);
+    this._close();
+    this.setState({ open: false });
+  },
+
+  toggle: function () {
+    if (this.state.open) {
+      this.close();
+    } else {
+      this.open();
+    }
+  },
+
+  _open: function () {
+    var body = this.refs.body.getDOMNode();
+    body.style.height = '0';
+    this.addClass(body, 'ddm-collapsible__body--transition');
+    body.style.height = getContentHeight();
+    body.addEventListener('transitionend', function transitionEnd(event) {
+      if (event.propertyName == 'height') {
+        this.removeClass(body, 'collapsible__body--transition');
+        body.style.height = 'auto';
+        body.removeEventListener('transitionend', transitionEnd, false);
+      }
+    }, false);
+  },
+
+  _close: function () {/* encapsulate messy stuff */
+    var body = this.refs.body.getDOMNode();
+    body.style.height = this.getContentHeight();
+    setTimeout(function () { /* force redraw */
+      this.addClass(body, 'ddm-collapsible__body--transition');
+      body.style.height = '0px';
+    }, 0);
+  },
+
+  getContentHeight: function () {
+    return this.refs.body.refs.content.getDOMNode().offsetHeight;
+  },
+
+  addClass: function (element, className) {
+    if (element.classList) {
+      element.classList.add(className);
+    } else {
+      element.className += ' ' + className;
+    }
+  },
+
+  removeClass: function (element, className) {
+    if (element.classList) {
+      element.classList.remove(className);
+    } else {
+      element.className = element.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+    }
   }
 
 });
