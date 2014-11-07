@@ -40,7 +40,7 @@ var CollapsibleHead = React.createClass({displayName: 'CollapsibleHead',
 var CollapsibleBody = React.createClass({displayName: 'CollapsibleBody',
   render: function () {
     return (
-      React.createElement("div", {className: "ddm-collapsible__body"}, 
+      React.createElement("div", {className: "ddm-collapsible__body", key: "body"}, 
         React.createElement("div", {className: "ddm-collapsible__content", ref: "content"}, 
           this.props.children
         )
@@ -67,12 +67,12 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   getInitialState: function() {
     return {
-      mounted: false,
       open: false || this.props.open
     }
   },
 
   render: function () {
+    console.log('render');
     return (
       React.createElement("div", {className: this.getClassNames()}, 
         this.renderChildren()
@@ -83,7 +83,6 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   getClassNames: function () {
     return React.addons.classSet({
       'ddm-collapsible': true,
-      'ddm-collapsible--mounted': this.state.mounted,
       'ddm-collapsible--open': this.state.open
     });
   },
@@ -117,15 +116,23 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   componentDidMount: function () {
-    this.setMaxHeight();
-    setTimeout(function () {
-      this.setState({mounted: true});
-    }.bind(this), 0);
-
+    this.setInitialHeight();
   },
 
-  componentDidUpdate: function () {
-    this.setMaxHeight();
+  componentDidUpdate: function (prevProps, prevState) {
+    if (!prevState.open && this.state.open) { /* opening */
+      this.transitionToHeightAuto();
+    }
+
+    if (prevState.open && !this.state.open) { /* closing */
+      this.transitionFromHeightAuto();
+    }
+  },
+
+  setInitialHeight: function () {
+    var body = this.refs.body.getDOMNode();
+    var height = this.state.open ? this.getContentHeight() : '0';
+    body.style.height = height;
   },
 
   handleHeadClick: function (event) {
@@ -133,22 +140,12 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   open: function () {
-    if (this.state.open) {
-      return; /* nothing to do */
-    }
-
     this.props.onOpen(this);
-    this._open();
     this.setState({ open: true });
   },
 
   close: function () {
-    if (!this.state.open) {
-      return; /* nothing to do */
-    }
-
     this.props.onClose(this);
-    this._close();
     this.setState({ open: false });
   },
 
@@ -160,31 +157,37 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     }
   },
 
-  _open: function () {
+  handleTransitionEnd: function (event) {
+    console.log('transitionend');
+    if (event.propertyName == 'height') {
+      var body = this.refs.body.getDOMNode();
+      this.removeClass(body, 'ddm-collapsible__body--transition');
+      body.style.height = 'auto';
+      body.removeEventListener('transitionend', this.handleTransitionEnd, false);
+    }
+  },
+
+  transitionToHeightAuto: function () { /* encapsulate messy stuff */
+    console.log('transitionToHeightAuto');
     var body = this.refs.body.getDOMNode();
     body.style.height = '0';
     this.addClass(body, 'ddm-collapsible__body--transition');
-    body.style.height = getContentHeight();
-    body.addEventListener('transitionend', function transitionEnd(event) {
-      if (event.propertyName == 'height') {
-        this.removeClass(body, 'collapsible__body--transition');
-        body.style.height = 'auto';
-        body.removeEventListener('transitionend', transitionEnd, false);
-      }
-    }, false);
+    body.style.height = this.getContentHeight();
+    body.addEventListener('transitionend', this.handleTransitionEnd, false);
   },
 
-  _close: function () {/* encapsulate messy stuff */
+  transitionFromHeightAuto: function () {/* encapsulate messy stuff */
+    console.log('transitionFromHeightAuto');
     var body = this.refs.body.getDOMNode();
     body.style.height = this.getContentHeight();
+    this.addClass(body, 'ddm-collapsible__body--transition');
     setTimeout(function () { /* force redraw */
-      this.addClass(body, 'ddm-collapsible__body--transition');
-      body.style.height = '0px';
-    }, 0);
+      body.style.height = '0';
+    }.bind(this), 0);
   },
 
   getContentHeight: function () {
-    return this.refs.body.refs.content.getDOMNode().offsetHeight;
+    return this.refs.body.refs.content.getDOMNode().offsetHeight + 'px';
   },
 
   addClass: function (element, className) {
