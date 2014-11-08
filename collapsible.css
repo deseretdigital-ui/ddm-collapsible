@@ -13,6 +13,8 @@
   .ddm-collapsible--open > .ddm-collapsible__body {
     height: auto; }
   .ddm-collapsible--will-close > .ddm-collapsible__body {
+    -webkit-transition: height 0.3s;
+    transition: height 0.3s;
     /* height: contentHeight; set by javascript */ }
   .ddm-collapsible--closing > .ddm-collapsible__body {
     -webkit-transition: height 0.3s;

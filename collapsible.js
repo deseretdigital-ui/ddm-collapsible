@@ -121,18 +121,22 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
     console.log('close');
     this.props.onClose(this);
-    this.setState({
-      open: false,
-      willClose: true,
-    }, this.startClose);
+    this.setBodyHeight();
+    setTimeout(function () {
+      this.setState({
+        open: false,
+        willClose: true,
+      }, this.startClose);
+    }.bind(this), 1)
   },
 
   startClose: function () {
     console.log('startClose');
-    this.setState({
-      willClose: false,
-      closing: true
-    }, this.finishClose);
+    this.unsetBodyHeight();
+    // this.setState({
+    //   willClose: false,
+    //   closing: true
+    // });
   },
 
   finishClose: function () {
@@ -215,10 +219,13 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   /* DOM */
 
   setBodyHeight: function () {
+    console.log('setBodyHeight');
     this.refs.body.getDOMNode().style.height = this.getContentHeight() + 'px';
+    this.refs.body.getDOMNode().offsetHeight; /* force repaint */
   },
 
   unsetBodyHeight: function () {
+    console.log('unsetBodyHeight');
     this.refs.body.getDOMNode().style.height = null;
   },
 
@@ -231,6 +238,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     if (!eventName) {
       console.log('transition not supported');
       callback(); /* transition not supported */
+      return;
     }
 
     var body = this.refs.body.getDOMNode();
@@ -245,7 +253,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     this.refs.body.getDOMNode().addEventListener(eventName, newCallback, false);
   },
 
-  transitionEndEventName: (function () {
+  transitionEndEventName: (function () { /* iife to reduce redundant calculations; trying to avoid dependencies */
     /* adapted from https://github.com/facebook/react/blob/master/src/addons/transitions/ReactTransitionEvents.js */
 
     var eventNames = {
@@ -261,20 +269,16 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     }
 
     var style = document.createElement('div').style;
-    console.log(style);
     var eventName = false;
 
     for (var styleName in eventNames) {
-      console.log(styleName, eventNames[styleName]);
       if (styleName in style) {
         eventName = eventNames[styleName];
         break;
       }
     }
 
-    console.log(eventName);
     return function () {
-      console.log(eventName);
       return eventName;
     };
   })()
