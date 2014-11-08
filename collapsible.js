@@ -103,7 +103,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     this.setState({
       willOpen: false,
       opening: true
-    });
+    }, this.transitionEnd(this.finishOpen));
   },
 
   finishOpen: function () {
@@ -111,7 +111,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     this.setState({
       opening: false,
       open: true
-    });
+    }, this.unsetBodyHeight);
   },
 
   close: function () {
@@ -225,6 +225,59 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   getContentHeight: function () {
     return this.refs.body.refs.content.getDOMNode().offsetHeight;
   },
+
+  transitionEnd: function (callback) {
+    var eventName = this.transitionEndEventName();
+    if (!eventName) {
+      console.log('transition not supported');
+      callback(); /* transition not supported */
+    }
+
+    var body = this.refs.body.getDOMNode();
+    var newCallback = function (event) {
+      console.log('transition supported');
+      if (event.propertyName === 'height') {
+        callback();
+        body.removeEventListener(eventName, newCallback);
+      }
+    };
+
+    this.refs.body.getDOMNode().addEventListener(eventName, newCallback, false);
+  },
+
+  transitionEndEventName: (function () {
+    /* adapted from https://github.com/facebook/react/blob/master/src/addons/transitions/ReactTransitionEvents.js */
+
+    var eventNames = {
+      'transition': 'transitionend',
+      'WebkitTransition': 'webkitTransitionEnd',
+      'MozTransition': 'mozTransitionEnd',
+      'OTransition': 'oTransitionEnd',
+      'msTransition': 'MSTransitionEnd'
+    };
+
+    if (!('TransitionEvent' in window)) {
+      delete eventNames['transition'];
+    }
+
+    var style = document.createElement('div').style;
+    console.log(style);
+    var eventName = false;
+
+    for (var styleName in eventNames) {
+      console.log(styleName, eventNames[styleName]);
+      if (styleName in style) {
+        eventName = eventNames[styleName];
+        break;
+      }
+    }
+
+    console.log(eventName);
+    return function () {
+      console.log(eventName);
+      return eventName;
+    };
+  })()
 
 
 

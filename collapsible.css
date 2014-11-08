@@ -11,7 +11,7 @@
     transition: height 0.3s;
     /* height: contentHeight; set by javascript */ }
   .ddm-collapsible--open > .ddm-collapsible__body {
-    height: auto !important; }
+    height: auto; }
   .ddm-collapsible--will-close > .ddm-collapsible__body {
     /* height: contentHeight; set by javascript */ }
   .ddm-collapsible--closing > .ddm-collapsible__body {
