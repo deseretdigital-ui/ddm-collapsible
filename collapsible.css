@@ -1,10 +1,23 @@
 .ddm-collapsible__body {
   overflow: hidden;
-  height: 0; }
-
-.ddm-collapsible__body--transition {
-  -webkit-transition: height 0.3s;
-  transition: height 0.3s; }
+  height: 0;
+  /* default closed */ }
+  .ddm-collapsible--will-open > .ddm-collapsible__body {
+    height: 0; }
+  .ddm-collapsible--opening > .ddm-collapsible__body {
+    -webkit-transition: height 0.3s;
+    transition: height 0.3s;
+    /* height: contentHeight; set by javascript */ }
+  .ddm-collapsible--open > .ddm-collapsible__body {
+    height: auto !important; }
+  .ddm-collapsible--will-close > .ddm-collapsible__body {
+    /* height: contentHeight; set by javascript */ }
+  .ddm-collapsible--closing > .ddm-collapsible__body {
+    -webkit-transition: height 0.3s;
+    transition: height 0.3s;
+    height: 0; }
+  .ddm-collapsible--closed > .ddm-collapsible__body {
+    height: 0; }
 
 .ddm-collapsible__head {
   cursor: pointer;

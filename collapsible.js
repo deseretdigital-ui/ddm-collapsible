@@ -51,6 +51,8 @@ var CollapsibleBody = React.createClass({displayName: 'CollapsibleBody',
 
 var Collapsible = React.createClass({displayName: 'Collapsible',
 
+  /* props */
+
   propTypes: {
     open: React.PropTypes.bool,
     onOpen: React.PropTypes.func,
@@ -65,15 +67,94 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     }
   },
 
+
+
+  /* state */
+
   getInitialState: function() {
-    console.log(this.props.open);
     return {
-      open: (this.props.open || false)
+      open: this.props.open || false,
+      willOpen: false,
+      opening: false,
+      willClose: false,
+      closing: false
     }
   },
 
+  isClosed: function () {
+    return !this.state.open && !this.state.willOpen && !this.state.willClose && !this.state.closing;
+  },
+
+  open: function () {
+    if (this.state.closing || this.state.opening || this.state.open) {
+      return; /* nothing to do or already doing something */
+    }
+
+    console.log('open');
+    this.props.onOpen(this);
+    this.setState({
+      willOpen: true
+    }, this.startOpen);
+  },
+
+  startOpen: function () {
+    console.log('startOpen');
+    this.setBodyHeight();
+    this.setState({
+      willOpen: false,
+      opening: true
+    });
+  },
+
+  finishOpen: function () {
+    console.log('finishOpen');
+    this.setState({
+      opening: false,
+      open: true
+    });
+  },
+
+  close: function () {
+    if (this.opening || this.closing || this.isClosed()) {
+      return; /* nothing to do or already doing something */
+    }
+
+    console.log('close');
+    this.props.onClose(this);
+    this.setState({
+      open: false,
+      willClose: true,
+    }, this.startClose);
+  },
+
+  startClose: function () {
+    console.log('startClose');
+    this.setState({
+      willClose: false,
+      closing: true
+    }, this.finishClose);
+  },
+
+  finishClose: function () {
+    console.log('finishClose');
+    this.setState({
+      closing: false
+    });
+  },
+
+  toggle: function () {
+    if (this.state.open) {
+      this.close();
+    } else {
+      this.open();
+    }
+  },
+
+
+
+  /* render */
+
   render: function () {
-    console.log('render');
     return (
       React.createElement("div", {className: this.getClassNames()}, 
         this.renderChildren()
@@ -84,7 +165,12 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   getClassNames: function () {
     return React.addons.classSet({
       'ddm-collapsible': true,
-      'ddm-collapsible--open': this.state.open
+      'ddm-collapsible--will-open': this.state.willOpen,
+      'ddm-collapsible--opening': this.state.opening,
+      'ddm-collapsible--open': this.state.open,
+      'ddm-collapsible--will-close': this.state.willClose,
+      'ddm-collapsible--closing': this.state.closing,
+      'ddm-collapsible--closed': this.isClosed()
     });
   },
 
@@ -115,100 +201,108 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     });
   },
 
-  componentDidMount: function () {
-    this.setInitialHeight();
-  },
 
-  componentDidUpdate: function (prevProps, prevState) {
-    if (!prevState.open && this.state.open) { /* opening */
-      this.transitionToHeightAuto();
-    } else if (prevState.open && !this.state.open) { /* closing */
-      this.transitionFromHeightAuto();
-    }
-  },
 
-  setInitialHeight: function () {
-    var body = this.refs.body.getDOMNode();
-    var height = this.state.open ? 'auto' : '0';
-    body.style.height = height;
-  },
+  /* handlers */
 
   handleHeadClick: function (event) {
-    console.log('click');
+    console.log('handleHeadClick');
     this.toggle();
   },
 
-  open: function () {
-    if (this.state.open) { return; }
-    this.props.onOpen(this);
-    this.setState({ open: true });
+
+
+  /* DOM */
+
+  setBodyHeight: function () {
+    this.refs.body.getDOMNode().style.height = this.getContentHeight() + 'px';
   },
 
-  close: function () {
-    if (!this.state.open) { return; }
-    this.props.onClose(this);
-    this.setState({ open: false });
-  },
-
-  toggle: function () {
-    if (this.state.open) {
-      this.close();
-    } else {
-      this.open();
-    }
-  },
-
-  handleTransitionEnd: function (event) {
-    console.log('transitionend');
-    if (event.propertyName == 'height') {
-      var body = this.refs.body.getDOMNode();
-      this.removeClass(body, 'ddm-collapsible__body--transition');
-      body.style.height = 'auto';
-      body.removeEventListener('transitionend', this.handleTransitionEnd, false);
-    }
-  },
-
-  transitionToHeightAuto: function () { /* encapsulate messy stuff */
-    console.log('transitionToHeightAuto');
-    var body = this.refs.body.getDOMNode();
-    body.style.height = '0px';
-    this.addClass(body, 'ddm-collapsible__body--transition');
-    body.style.height = this.getContentHeight();
-    body.addEventListener('transitionend', this.handleTransitionEnd, false);
-  },
-
-  setHeightZero: function () {
-    var body = this.refs.body.getDOMNode();
-    this.addClass(body, 'ddm-collapsible__body--transition');
-    body.style.height = '0px';
-  },
-
-  transitionFromHeightAuto: function () { /* encapsulate messy stuff */
-    var body = this.refs.body.getDOMNode();
-    body.style.height = this.getContentHeight();
-    setTimeout(this.setHeightZero, 0);
+  unsetBodyHeight: function () {
+    this.refs.body.getDOMNode().style.height = null;
   },
 
   getContentHeight: function () {
-    console.log(this.refs.body.refs.content.getDOMNode().offsetHeight);
-    return this.refs.body.refs.content.getDOMNode().offsetHeight + 'px';
+    return this.refs.body.refs.content.getDOMNode().offsetHeight;
   },
 
-  addClass: function (element, className) {
-    if (element.classList) {
-      element.classList.add(className);
-    } else {
-      element.className += ' ' + className;
-    }
-  },
 
-  removeClass: function (element, className) {
-    if (element.classList) {
-      element.classList.remove(className);
-    } else {
-      element.className = element.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-    }
-  }
+
+
+
+
+
+  // setInitialHeight: function () {
+  //   var body = this.refs.body.getDOMNode();
+  //   var height = this.state.open ? 'auto' : '0';
+  //   body.style.height = height;
+  // },
+
+  // open: function () {
+  //   if (this.state.open) { return; }
+  //   this.props.onOpen(this);
+  //   this.setState({
+  //     willOpen: true
+  //   });
+  // },
+
+  // close: function () {
+  //   if (!this.state.open) { return; }
+  //   this.props.onClose(this);
+  //   this.setState({ open: false });
+  // },
+
+  // handleTransitionEnd: function (event) {
+  //   console.log('transitionend');
+  //   if (event.propertyName == 'height') {
+  //     var body = this.refs.body.getDOMNode();
+  //     this.removeClass(body, 'ddm-collapsible__body--transition');
+  //     body.style.height = 'auto';
+  //     body.removeEventListener('transitionend', this.handleTransitionEnd, false);
+  //   }
+  // },
+
+  // transitionToHeightAuto: function () { /* encapsulate messy stuff */
+  //   console.log('transitionToHeightAuto');
+  //   var body = this.refs.body.getDOMNode();
+  //   body.style.height = '0px';
+  //   this.addClass(body, 'ddm-collapsible__body--transition');
+  //   body.style.height = this.getContentHeight();
+  //   body.addEventListener('transitionend', this.handleTransitionEnd, false);
+  // },
+
+  // setHeightZero: function () {
+  //   var body = this.refs.body.getDOMNode();
+  //   this.addClass(body, 'ddm-collapsible__body--transition');
+  //   body.style.height = '0px';
+  // },
+
+  // transitionFromHeightAuto: function () { /* encapsulate messy stuff */
+  //   var body = this.refs.body.getDOMNode();
+  //   body.style.height = this.getContentHeight();
+  //   setTimeout(this.setHeightZero, 0);
+  // },
+
+  // getContentHeight: function () {
+  //   console.log(this.refs.body.refs.content.getDOMNode().offsetHeight);
+  //   return this.refs.body.refs.content.getDOMNode().offsetHeight + 'px';
+  // },
+
+  // addClass: function (element, className) {
+  //   if (element.classList) {
+  //     element.classList.add(className);
+  //   } else {
+  //     element.className += ' ' + className;
+  //   }
+  // },
+
+  // removeClass: function (element, className) {
+  //   if (element.classList) {
+  //     element.classList.remove(className);
+  //   } else {
+  //     element.className = element.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+  //   }
+  // }
 
 });
 
