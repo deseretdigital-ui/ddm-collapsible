@@ -111,8 +111,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   renderBody: function (child) {
     return React.addons.cloneWithProps(child, {
-      ref: 'body',
-      open: this.state.open
+      ref: 'body'
     });
   },
 
@@ -179,13 +178,13 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   setHeightZero: function () {
+    this.addClass(body, 'ddm-collapsible__body--transition');
     this.refs.body.getDOMNode().style.height = '0px';
   },
 
   transitionFromHeightAuto: function () { /* encapsulate messy stuff */
     var body = this.refs.body.getDOMNode();
     body.style.height = this.getContentHeight();
-    this.addClass(body, 'ddm-collapsible__body--transition');
     setTimeout(this.setHeightZero, 0);
   },
 
