@@ -136,15 +136,18 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   handleHeadClick: function (event) {
+    console.log('click');
     this.toggle();
   },
 
   open: function () {
+    if (this.state.open) { return; }
     this.props.onOpen(this);
     this.setState({ open: true });
   },
 
   close: function () {
+    if (!this.state.open) { return; }
     this.props.onClose(this);
     this.setState({ open: false });
   },
@@ -176,14 +179,14 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     body.addEventListener('transitionend', this.handleTransitionEnd, false);
   },
 
-  transitionFromHeightAuto: function () {/* encapsulate messy stuff */
+  transitionFromHeightAuto: function () { /* encapsulate messy stuff */
     console.log('transitionFromHeightAuto');
     var body = this.refs.body.getDOMNode();
     body.style.height = this.getContentHeight();
     this.addClass(body, 'ddm-collapsible__body--transition');
     setTimeout(function () { /* wait for redraw */
       body.style.height = '0px';
-    }, 0);
+    }.bind(this), 0);
   },
 
   getContentHeight: function () {

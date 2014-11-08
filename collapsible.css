@@ -1,5 +1,6 @@
 .ddm-collapsible__body {
-  overflow: hidden; }
+  overflow: hidden;
+  height: 0; }
 
 .ddm-collapsible__body--transition {
   -webkit-transition: height 0.3s;
