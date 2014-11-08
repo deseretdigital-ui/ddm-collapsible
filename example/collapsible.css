@@ -1,9 +1,10 @@
 .ddm-collapsible__body {
   overflow: hidden;
-  max-height: 0; }
-  .ddm-collapsible--mounted > .ddm-collapsible__body {
-    -webkit-transition: max-height 0.3s;
-    transition: max-height 0.3s; }
+  height: 0; }
+
+.ddm-collapsible__body--transition {
+  -webkit-transition: height 0.3s;
+  transition: height 0.3s; }
 
 .ddm-collapsible__head {
   cursor: pointer;

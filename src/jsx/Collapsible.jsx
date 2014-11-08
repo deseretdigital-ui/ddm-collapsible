@@ -1,7 +1,5 @@
 var Collapsible = React.createClass({
 
-  /* react hooks */
-
   propTypes: {
     open: React.PropTypes.bool,
     onOpen: React.PropTypes.func,
@@ -10,20 +8,21 @@ var Collapsible = React.createClass({
 
   getDefaultProps: function () {
     return {
-      open: false,
+      open: null,
       onOpen: function () {},
       onClose: function () {}
     }
   },
 
   getInitialState: function() {
+    console.log(this.props.open);
     return {
-      mounted: false,
-      open: false || this.props.open
+      open: (this.props.open || false)
     }
   },
 
   render: function () {
+    console.log('render');
     return (
       <div className={this.getClassNames()}>
         {this.renderChildren()}
@@ -31,79 +30,11 @@ var Collapsible = React.createClass({
     );
   },
 
-  componentDidMount: function () {
-    this.setMaxHeight();
-    setTimeout(function () {
-      this.setState({mounted: true});
-    }.bind(this), 0);
-
-  },
-
-  componentDidUpdate: function () {
-    this.setMaxHeight();
-  },
-
-
-
-  /* event handlers */
-
-  handleHeadClick: function (event) {
-    this.toggle();
-  },
-
-
-
-  /* methods */
-
-  open: function () {
-    if (this.state.open) {
-      return; /* nothing to do */
-    }
-
-    this.props.onOpen(this);
-
-    this.setState({
-      open: true
-    });
-  },
-
-  close: function () {
-    if (!this.state.open) {
-      return; /* nothing to do */
-    }
-
-    this.props.onClose(this);
-
-    this.setState({
-      open: false
-    });
-  },
-
-  toggle: function () {
-    if (this.state.open) {
-      this.close();
-    } else {
-      this.open();
-    }
-  },
-
-
-
-  /* helpers */
-
   getClassNames: function () {
     return React.addons.classSet({
       'ddm-collapsible': true,
-      'ddm-collapsible--mounted': this.state.mounted,
       'ddm-collapsible--open': this.state.open
     });
-  },
-
-  setMaxHeight: function () {
-    var body = this.refs.body.getDOMNode();
-    var content = this.refs.body.refs.content.getDOMNode();
-    var contentHeight = content.offsetHeight + 'px';
-    body.style.maxHeight = this.state.open ? contentHeight : '0';
   },
 
   renderChildren: function () {
@@ -131,6 +62,101 @@ var Collapsible = React.createClass({
     return React.addons.cloneWithProps(child, {
       ref: 'body'
     });
+  },
+
+  componentDidMount: function () {
+    this.setInitialHeight();
+  },
+
+  componentDidUpdate: function (prevProps, prevState) {
+    if (!prevState.open && this.state.open) { /* opening */
+      this.transitionToHeightAuto();
+    } else if (prevState.open && !this.state.open) { /* closing */
+      this.transitionFromHeightAuto();
+    }
+  },
+
+  setInitialHeight: function () {
+    var body = this.refs.body.getDOMNode();
+    var height = this.state.open ? 'auto' : '0';
+    body.style.height = height;
+  },
+
+  handleHeadClick: function (event) {
+    console.log('click');
+    this.toggle();
+  },
+
+  open: function () {
+    if (this.state.open) { return; }
+    this.props.onOpen(this);
+    this.setState({ open: true });
+  },
+
+  close: function () {
+    if (!this.state.open) { return; }
+    this.props.onClose(this);
+    this.setState({ open: false });
+  },
+
+  toggle: function () {
+    if (this.state.open) {
+      this.close();
+    } else {
+      this.open();
+    }
+  },
+
+  handleTransitionEnd: function (event) {
+    console.log('transitionend');
+    if (event.propertyName == 'height') {
+      var body = this.refs.body.getDOMNode();
+      this.removeClass(body, 'ddm-collapsible__body--transition');
+      body.style.height = 'auto';
+      body.removeEventListener('transitionend', this.handleTransitionEnd, false);
+    }
+  },
+
+  transitionToHeightAuto: function () { /* encapsulate messy stuff */
+    console.log('transitionToHeightAuto');
+    var body = this.refs.body.getDOMNode();
+    body.style.height = '0px';
+    this.addClass(body, 'ddm-collapsible__body--transition');
+    body.style.height = this.getContentHeight();
+    body.addEventListener('transitionend', this.handleTransitionEnd, false);
+  },
+
+  setHeightZero: function () {
+    var body = this.refs.body.getDOMNode();
+    this.addClass(body, 'ddm-collapsible__body--transition');
+    body.style.height = '0px';
+  },
+
+  transitionFromHeightAuto: function () { /* encapsulate messy stuff */
+    var body = this.refs.body.getDOMNode();
+    body.style.height = this.getContentHeight();
+    setTimeout(this.setHeightZero, 0);
+  },
+
+  getContentHeight: function () {
+    console.log(this.refs.body.refs.content.getDOMNode().offsetHeight);
+    return this.refs.body.refs.content.getDOMNode().offsetHeight + 'px';
+  },
+
+  addClass: function (element, className) {
+    if (element.classList) {
+      element.classList.add(className);
+    } else {
+      element.className += ' ' + className;
+    }
+  },
+
+  removeClass: function (element, className) {
+    if (element.classList) {
+      element.classList.remove(className);
+    } else {
+      element.className = element.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+    }
   }
 
 });

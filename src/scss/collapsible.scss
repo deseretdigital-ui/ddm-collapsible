@@ -1,11 +1,11 @@
 .ddm-collapsible__body {
   overflow: hidden;
-  max-height: 0;
+  height: 0;
+}
 
-  .ddm-collapsible--mounted > & {
-    -webkit-transition: max-height .3s;
-    transition: max-height .3s;
-  }
+.ddm-collapsible__body--transition {
+  -webkit-transition: height .3s;
+  transition: height .3s;
 }
 
 .ddm-collapsible__head {
