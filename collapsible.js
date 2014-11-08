@@ -59,15 +59,16 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   getDefaultProps: function () {
     return {
-      open: false,
+      open: null,
       onOpen: function () {},
       onClose: function () {}
     }
   },
 
   getInitialState: function() {
+    console.log(this.props.open);
     return {
-      open: this.props.open || false
+      open: (this.props.open || false)
     }
   },
 
@@ -129,7 +130,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   setInitialHeight: function () {
     var body = this.refs.body.getDOMNode();
-    var height = this.state.open ? this.getContentHeight() : '0';
+    var height = this.state.open ? 'auto' : '0';
     body.style.height = height;
   },
 
@@ -189,6 +190,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   getContentHeight: function () {
+    console.log(this.refs.body.refs.content.getDOMNode().offsetHeight);
     return this.refs.body.refs.content.getDOMNode().offsetHeight + 'px';
   },
 
@@ -272,7 +274,7 @@ var CollapsibleGroup = React.createClass({displayName: 'CollapsibleGroup',
       key: 'ddmCollapsible' + index,
       ref: 'ddmCollapsible' + index,
       index: index,
-      open: child.props.open === undefined ? this.props.open : child.props.open,
+      open: child.props.open === null ? this.props.open : child.props.open,
       onOpen: this.handleCollapsibleOpen
     });
 
