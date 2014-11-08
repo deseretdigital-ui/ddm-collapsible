@@ -249,7 +249,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
       }
     };
 
-    this.refs.body.getDOMNode().addEventListener(eventName, newCallback, false);
+    body.addEventListener(eventName, newCallback, false);
   },
 
   transitionEndEventName: (function () { /* iife to reduce redundant calculations; trying to avoid dependencies */
