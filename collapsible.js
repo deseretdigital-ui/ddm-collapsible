@@ -67,7 +67,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   getInitialState: function() {
     return {
-      open: false || this.props.open
+      open: this.props.open || false
     }
   },
 
@@ -122,9 +122,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   componentDidUpdate: function (prevProps, prevState) {
     if (!prevState.open && this.state.open) { /* opening */
       this.transitionToHeightAuto();
-    }
-
-    if (prevState.open && !this.state.open) { /* closing */
+    } else if (prevState.open && !this.state.open) { /* closing */
       this.transitionFromHeightAuto();
     }
   },
