@@ -122,7 +122,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     console.log('close');
     this.props.onClose(this);
     this.setBodyHeight();
-    setTimeout(function () {
+    setTimeout(function () { /* wait for height to set */
       this.setState({
         open: false,
         willClose: true,
@@ -133,10 +133,10 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   startClose: function () {
     console.log('startClose');
     this.unsetBodyHeight();
-    // this.setState({
-    //   willClose: false,
-    //   closing: true
-    // });
+    this.setState({
+      willClose: false,
+      closing: true
+    });
   },
 
   finishClose: function () {
