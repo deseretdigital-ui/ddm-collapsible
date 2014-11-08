@@ -181,7 +181,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   blah: function () {
     this.addClass(body, 'ddm-collapsible__body--transition');
-    body.style.height = '0px';
+    this.refs.body.getDOMNode().style.height = '0px';
   },
 
   transitionFromHeightAuto: function () { /* encapsulate messy stuff */
