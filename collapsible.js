@@ -179,16 +179,15 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     body.addEventListener('transitionend', this.handleTransitionEnd, false);
   },
 
-  blah: function () {
-    var body = this.refs.body.getDOMNode();
-    this.addClass(body, 'ddm-collapsible__body--transition');
-    body.style.height = '0px';
+  setHeightZero: function () {
+    this.refs.body.getDOMNode().style.height = '0px';
   },
 
   transitionFromHeightAuto: function () { /* encapsulate messy stuff */
     var body = this.refs.body.getDOMNode();
     body.style.height = this.getContentHeight();
-    setTimeout(this.blah, 0);
+    this.addClass(body, 'ddm-collapsible__body--transition');
+    setTimeout(this.setHeightZero, 0);
   },
 
   getContentHeight: function () {
