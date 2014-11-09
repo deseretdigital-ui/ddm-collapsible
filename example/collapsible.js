@@ -162,6 +162,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   startOpen: function () {
     this.transitionEnd(this.finishOpen);
     this.setState({ willOpen: false, opening: true }, function () {
+      this.setTransitionDuration();
       this.after(this.hasOpeningClass, this.setBodyHeight);
     }.bind(this));
   },
@@ -172,6 +173,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   finishOpen: function () {
     this.setState({ opening: false, open: true }, function () {
+      this.unsetTransitionDuration();
       this.after(this.hasOpenClass, this.unsetBodyHeight);
     }.bind(this));
   },
@@ -198,6 +200,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   startClose: function () {
     this.transitionEnd(this.finishClose);
     this.setState({ willClose: false, closing: true }, function () {
+      this.setTransitionDuration();
       this.after(this.readyToClose, this.unsetBodyHeight);
     });
   },
@@ -210,7 +213,13 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     return ready;
   },
 
+  hasClosingClass: function () {
+    var hasClosingClass = this.hasClass(this.getDOMNode(), 'ddm-collapsible--closing');
+    return hasClosingClass;
+  },
+
   finishClose: function () {
+    this.unsetTransitionDuration();
     this.setState({ closing: false });
   },
 
@@ -231,8 +240,16 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   setBodyHeight: function () {
-    this.setTransitionDuration();
     this.refs.body.getDOMNode().style.height = this.getContentHeight();
+  },
+
+  unsetBodyHeight: function () {
+    this.refs.body.getDOMNode().style.height = null;
+  },
+
+  unsetTransitionDuration: function () {
+    var styleName = this.transitionStyleName() + 'Duration';
+    this.refs.body.getDOMNode().style[styleName] = null;
   },
 
   setTransitionDuration: function () {
@@ -240,10 +257,6 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     var duration = contentHeight / this.props.speed;
     var styleName = this.transitionStyleName() + 'Duration';
     this.refs.body.getDOMNode().style[styleName] = duration + 's';
-  },
-
-  unsetBodyHeight: function () {
-    this.refs.body.getDOMNode().style.height = null;
   },
 
   getContentHeight: function () {
@@ -325,11 +338,6 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
         this.after(check, action, --limit);
       }.bind(this), 0);
     }
-  },
-
-  hasClosingClass: function () {
-    var hasClosingClass = this.hasClass(this.getDOMNode(), 'ddm-collapsible--closing');
-    return hasClosingClass;
   },
 
   hasBodyHeight: function () {
