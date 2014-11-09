@@ -49,21 +49,21 @@ var CollapsibleBody = React.createClass({displayName: 'CollapsibleBody',
   }
 });
 
-var oldbody;
-
 var Collapsible = React.createClass({displayName: 'Collapsible',
 
   propTypes: {
     open: React.PropTypes.bool,
     onOpen: React.PropTypes.func,
-    onClose: React.PropTypes.func
+    onClose: React.PropTypes.func,
+    speed: React.PropTypes.number
   },
 
   getDefaultProps: function () {
     return {
       open: null,
       onOpen: function () {},
-      onClose: function () {}
+      onClose: function () {},
+      speed: 800 /* pixels per second */
     }
   },
 
@@ -146,22 +146,32 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
     this.props.onOpen(this);
 
-    // prepare to open
+    this.prepareOpen();
+  },
+
+  prepareOpen: function () {
     this.setState({ willOpen: true }, function () {
-      this.after(function () {
-        return this.hasClass(this.getDOMNode(), 'ddm-collapsible--will-open');
-      }.bind(this), function () {
-        this.transitionEnd(function () {
-          // finish open
-          this.setState({ opening: false, open: true }, this.unsetBodyHeight);
-        }.bind(this));
-        this.setState({ willOpen: false, opening: true }, function () {
-          this.after(function () {
-            return this.hasClass(this.getDOMNode(), 'ddm-collapsible--opening');
-          }.bind(this), this.setBodyHeight); // start open
-        }.bind(this));
-      }.bind(this));
+      this.after(this.hasWillOpenClass, this.startOpen);
     }.bind(this));
+  },
+
+  hasWillOpenClass: function () {
+    return this.hasClass(this.getDOMNode(), 'ddm-collapsible--will-open');
+  },
+
+  startOpen: function () {
+    this.transitionEnd(this.finishOpen);
+    this.setState({ willOpen: false, opening: true }, function () {
+      this.after(this.hasOpeningClass, this.setBodyHeight);
+    }.bind(this));
+  },
+
+  hasOpeningClass: function () {
+    return this.hasClass(this.getDOMNode(), 'ddm-collapsible--opening');
+  },
+
+  finishOpen: function () {
+    this.setState({ opening: false, open: true }, this.unsetBodyHeight);
   },
 
   close: function () {
@@ -170,6 +180,11 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     }
 
     this.props.onClose(this);
+
+    this.prepareClose();
+  },
+
+  prepareClose: function () {
     this.setBodyHeight();
     this.setState({
       open: false,
@@ -222,6 +237,13 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     this.refs.body.getDOMNode().style.height = this.getContentHeight();
   },
 
+  setTransitionDuration: function () {
+    var contentHeight = parseInt(this.getContentHeight(), 10);
+    var duration = contentHeight / this.props.speed;
+    var styleName = this.transitionStyleName() + 'Duration';
+    this.refs.body.getDOMNode().style[styleName] = duration + 's';
+  },
+
   unsetBodyHeight: function () {
     this.refs.body.getDOMNode().style.height = null;
   },
@@ -233,12 +255,6 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   transitionEnd: function (callback) {
     var eventName = this.transitionEndEventName();
     var body = this.refs.body.getDOMNode();
-    if (oldbody === null) {
-      oldbody = body;
-    }
-    if (oldbody !== body) {
-    }
-    oldbody = body;
     var handler = function (event) {
       if (event.propertyName === 'height') {
         callback();
@@ -253,7 +269,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     return this.transitionEndEventName() !== false;
   },
 
-  transitionEndEventName: (function () { /* iife to reduce redundant calculations; trying to avoid dependencies */
+  transitionEndEventName: function () {
     /* adapted from https://github.com/facebook/react/blob/master/src/addons/transitions/ReactTransitionEvents.js */
 
     var eventNames = {
@@ -269,19 +285,38 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     }
 
     var style = document.createElement('div').style;
+    var styleName = this.transitionStyleName();
     var eventName = false;
 
-    for (var styleName in eventNames) {
-      if (styleName in style) {
-        eventName = eventNames[styleName];
+    if (styleName !== false) {
+      eventName = eventNames[styleName];
+    }
+
+    return eventName;
+  },
+
+  transitionStyleName: function () {
+    var styleNames = [
+      'transition',
+      'WebkitTransition',
+      'MozTransition',
+      'OTransition',
+      'msTransition'
+    ];
+
+    var style = document.createElement('div').style;
+    var styleName = false;
+
+    for (var i = 0; i < styleNames.length; i++) {
+      var key = styleNames[i];
+      if (key in style) {
+        styleName = key;
         break;
       }
     }
 
-    return function () {
-      return eventName;
-    };
-  })(),
+    return styleName;
+  },
 
   after: function (check, action, limit) {
     limit = limit === undefined ? 10 : limit;
