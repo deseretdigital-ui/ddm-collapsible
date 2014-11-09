@@ -17,6 +17,7 @@ gulp.task('scss', function () {
 
 
 var jsxFiles = [ /* listed in dependency order for concat; TODO use module loading system */
+  './src/jsx/Transitions.jsx',
   './src/jsx/CollapsibleHead.jsx',
   './src/jsx/CollapsibleBody.jsx',
   './src/jsx/Collapsible.jsx',

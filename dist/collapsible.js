@@ -1,3 +1,90 @@
+var Transitions = {
+  supported: function () {
+    return this.styleName() !== false;
+  },
+
+  styleName: function () {
+    var styleNames = [
+      'transition',
+      'WebkitTransition',
+      'MozTransition',
+      'OTransition',
+      'msTransition'
+    ];
+
+    var style = document.createElement('div').style;
+    var styleName = false;
+
+    for (var i = 0; i < styleNames.length; i++) {
+      var key = styleNames[i];
+      if (key in style) {
+        styleName = key;
+        break;
+      }
+    }
+
+    return styleName;
+  },
+
+  endEventName: function () {
+    /* adapted from https://github.com/facebook/react/blob/master/src/addons/transitions/ReactTransitionEvents.js */
+
+    var eventNames = {
+      'transition': 'transitionend',
+      'WebkitTransition': 'webkitTransitionEnd',
+      'MozTransition': 'mozTransitionEnd',
+      'OTransition': 'oTransitionEnd',
+      'msTransition': 'MSTransitionEnd'
+    };
+
+    if (!('TransitionEvent' in window)) {
+      delete eventNames['transition'];
+    }
+
+    var styleName = this.styleName();
+    var eventName = false;
+
+    if (styleName !== false) {
+      eventName = eventNames[styleName];
+    }
+
+    return eventName;
+  },
+
+  addEndEventListener: function (element, handler, property, autoRemove) {
+    if (property) {
+      handler = (function (originalHandler) {
+        return function (event) {
+          if (event.propertyName === property) {
+            originalHandler(event);
+          }
+        };
+      })(handler);
+    }
+
+    if (autoRemove !== false) {
+      var remove = this.removeEndEventListener.bind(this);
+      handler = (function (originalHandler) {
+        return function (event) {
+          originalHandler(event);
+          remove(element, handler);
+        };
+      })(handler);
+    }
+
+    element.addEventListener(this.endEventName(), handler, false);
+    return handler; /* returns new handler for removal */
+  },
+
+  removeEndEventListener: function (element, handler) {
+    element.removeEventListener(this.endEventName(), handler);
+  },
+
+  setDuration: function (element, duration) {
+    element.style[this.styleName() + 'Duration'] = duration;
+  }
+};
+
 var CollapsibleHead = React.createClass({displayName: 'CollapsibleHead',
 
   /* react hooks */
@@ -38,6 +125,16 @@ var CollapsibleHead = React.createClass({displayName: 'CollapsibleHead',
 });
 
 var CollapsibleBody = React.createClass({displayName: 'CollapsibleBody',
+  propTypes: {
+    speed: React.PropTypes.number
+  },
+
+  getDefaultProps: function () {
+    return {
+      speed: 700 // pixels per second: .3s duration for about 210px
+    };
+  },
+
   render: function () {
     return (
       React.createElement("div", {className: "ddm-collapsible__body", key: "body"}, 
@@ -46,7 +143,41 @@ var CollapsibleBody = React.createClass({displayName: 'CollapsibleBody',
         )
       )
     );
+  },
+
+  setHeight: function () {
+    this.getDOMNode().style.height = this.getContentHeight() + 'px';
+  },
+
+  hasHeight: function () {
+    var height = this.getDOMNode().style.height;
+    var contentHeight = this.getContentHeight() + 'px';
+    var hasHeight = height === contentHeight;
+    return hasHeight;
+  },
+
+  unsetHeight: function () {
+    this.getDOMNode().style.height = null;
+  },
+
+  getContentHeight: function () {
+    return this.refs.content.getDOMNode().offsetHeight;
+  },
+
+  addTransitionEndHandler: function (handler) {
+    return Transitions.addEndEventListener(this.getDOMNode(), handler, 'height');
+  },
+
+  setTransitionDuration: function () {
+    var contentHeight = this.getContentHeight();
+    var duration = (contentHeight / this.props.speed).toFixed(2) + 's';
+    Transitions.setDuration(this.getDOMNode(), duration);
+  },
+
+  unsetTransitionDuration: function () {
+    Transitions.setDuration(this.getDOMNode(), null);
   }
+
 });
 
 var Collapsible = React.createClass({displayName: 'Collapsible',
@@ -54,8 +185,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   propTypes: {
     open: React.PropTypes.bool,
     onOpen: React.PropTypes.func,
-    onClose: React.PropTypes.func,
-    speed: React.PropTypes.number
+    onClose: React.PropTypes.func
   },
 
   getDefaultProps: function () {
@@ -160,10 +290,10 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   startOpen: function () {
-    this.addTransitionEndHandler(this.finishOpen);
+    this.refs.body.addTransitionEndHandler(this.finishOpen);
     this.setState({ willOpen: false, opening: true }, function () {
-      this.setTransitionDuration();
-      this.after(this.hasOpeningClass, this.setBodyHeight);
+      this.refs.body.setTransitionDuration();
+      this.after(this.hasOpeningClass, this.refs.body.setHeight);
     }.bind(this));
   },
 
@@ -173,8 +303,8 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   finishOpen: function () {
     this.setState({ opening: false, open: true }, function () {
-      this.unsetTransitionDuration();
-      this.after(this.hasOpenClass, this.unsetBodyHeight);
+      this.refs.body.unsetTransitionDuration();
+      this.after(this.hasOpenClass, this.refs.body.unsetHeight);
     }.bind(this));
   },
 
@@ -193,31 +323,24 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   prepareClose: function () {
-    this.setBodyHeight();
+    this.refs.body.setHeight();
     this.setState({ open: false, willClose: true }, this.startClose);
   },
 
   startClose: function () {
-    this.addTransitionEndHandler(this.finishClose);
+    this.refs.body.addTransitionEndHandler(this.finishClose);
     this.setState({ willClose: false, closing: true }, function () {
-      this.setTransitionDuration();
-      this.after(this.readyToClose, this.unsetBodyHeight);
+      this.refs.body.setTransitionDuration();
+      this.after(this.readyToClose, this.refs.body.unsetHeight);
     });
   },
 
   readyToClose: function () {
     var ready = (
       this.hasClosingClass()
-      && this.hasBodyHeight()
+      && this.refs.body.hasHeight()
     );
     return ready;
-  },
-
-  hasBodyHeight: function () {
-    var bodyHeight = this.refs.body.getDOMNode().style.height;
-    var contentHeight = this.getContentHeight();
-    var hasBodyHeight = bodyHeight === contentHeight;
-    return hasBodyHeight;
   },
 
   hasClosingClass: function () {
@@ -226,7 +349,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   finishClose: function () {
-    this.unsetTransitionDuration();
+    this.refs.body.unsetTransitionDuration();
     this.setState({ closing: false });
   },
 
@@ -246,128 +369,14 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     );
   },
 
-  setBodyHeight: function () {
-    this.refs.body.getDOMNode().style.height = this.getContentHeight();
-  },
-
-  unsetBodyHeight: function () {
-    this.refs.body.getDOMNode().style.height = null;
-  },
-
-  unsetTransitionDuration: function () {
-    this.transition.setDuration(this.refs.body.getDOMNode(), null);
-  },
-
-  addTransitionEndHandler: function (handler) {
-    return this.transition.addEndEventListener(this.refs.body.getDOMNode(), handler, 'height');
-  },
-
-  setTransitionDuration: function () {
-    var contentHeight = parseInt(this.getContentHeight(), 10);
-    var duration = (contentHeight / this.props.speed) + 's';
-    this.transition.setDuration(this.refs.body.getDOMNode(), duration);
-  },
-
-  getContentHeight: function () {
-    return this.refs.body.refs.content.getDOMNode().offsetHeight + 'px';
-  },
-
   // helpers; highly reusable; candidate for graduation
-  transition: {
-
-    supported: function () {
-      return this.styleName() !== false;
-    },
-
-    styleName: function () {
-      var styleNames = [
-        'transition',
-        'WebkitTransition',
-        'MozTransition',
-        'OTransition',
-        'msTransition'
-      ];
-
-      var style = document.createElement('div').style;
-      var styleName = false;
-
-      for (var i = 0; i < styleNames.length; i++) {
-        var key = styleNames[i];
-        if (key in style) {
-          styleName = key;
-          break;
-        }
-      }
-
-      return styleName;
-    },
-
-    endEventName: function () {
-      /* adapted from https://github.com/facebook/react/blob/master/src/addons/transitions/ReactTransitionEvents.js */
-
-      var eventNames = {
-        'transition': 'transitionend',
-        'WebkitTransition': 'webkitTransitionEnd',
-        'MozTransition': 'mozTransitionEnd',
-        'OTransition': 'oTransitionEnd',
-        'msTransition': 'MSTransitionEnd'
-      };
-
-      if (!('TransitionEvent' in window)) {
-        delete eventNames['transition'];
-      }
-
-      var styleName = this.styleName();
-      var eventName = false;
-
-      if (styleName !== false) {
-        eventName = eventNames[styleName];
-      }
-
-      return eventName;
-    },
-
-    addEndEventListener: function (element, handler, property, autoRemove) {
-      if (property) {
-        handler = (function (originalHandler) {
-          return function (event) {
-            if (event.propertyName === property) {
-              originalHandler(event);
-            }
-          };
-        })(handler);
-      }
-
-      if (autoRemove !== false) {
-        var remove = this.removeEndEventListener.bind(this);
-        handler = (function (originalHandler) {
-          return function (event) {
-            originalHandler(event);
-            remove(element, handler);
-          };
-        })(handler);
-      }
-
-      element.addEventListener(this.endEventName(), handler, false);
-      return handler; /* returns new handler for removal */
-    },
-
-    removeEndEventListener: function (element, handler) {
-      element.removeEventListener(this.endEventName(), handler);
-    },
-
-    setDuration: function (element, duration) {
-      element.style[this.styleName() + 'Duration'] = duration;
-    }
-  },
-
-  after: function (check, action, limit) {
+  after: function after(check, action, limit) {
     limit = limit === undefined ? 10 : limit;
     if (check()) {
       action();
     } else if (limit > 1) {
       setTimeout(function () {
-        this.after(check, action, --limit);
+        after(check, action, --limit);
       }.bind(this), 0);
     }
   },
