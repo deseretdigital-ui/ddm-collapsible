@@ -3,8 +3,6 @@
   height: 0;
   /* default closed */ }
   .ddm-collapsible--will-open > .ddm-collapsible__body {
-    -webkit-transition: height 0.3s;
-    transition: height 0.3s;
     height: 0; }
   .ddm-collapsible--opening > .ddm-collapsible__body {
     -webkit-transition: height 0.3s;
