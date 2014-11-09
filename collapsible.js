@@ -186,10 +186,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   prepareClose: function () {
     this.setBodyHeight();
-    this.setState({
-      open: false,
-      willClose: true
-    }, this.startClose);
+    this.setState({ open: false, willClose: true }, this.startClose);
   },
 
   startClose: function () {
