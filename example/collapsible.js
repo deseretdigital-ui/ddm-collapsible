@@ -161,7 +161,6 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   startOpen: function () {
     this.transitionEnd(this.finishOpen);
-    this.setTransitionDuration();
     this.setState({ willOpen: false, opening: true }, function () {
       this.after(this.hasOpeningClass, this.setBodyHeight);
     }.bind(this));
@@ -172,7 +171,13 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   finishOpen: function () {
-    this.setState({ opening: false, open: true }, this.unsetBodyHeight);
+    this.setState({ opening: false, open: true }, function () {
+      this.after(this.hasOpenClass, this.unsetBodyHeight);
+    }.bind(this));
+  },
+
+  hasOpenClass: function () {
+    return this.hasClass(this.getDOMNode(), 'ddm-collapsible--open');
   },
 
   close: function () {
@@ -187,7 +192,6 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   prepareClose: function () {
     this.setBodyHeight();
-    this.setTransitionDuration();
     this.setState({ open: false, willClose: true }, this.startClose);
   },
 
