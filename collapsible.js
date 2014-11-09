@@ -330,6 +330,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     this.setState({ willClose: false, closing: true }, function () {
       this.refs.body.setTransitionDuration();
       this.after(this.readyToClose, this.refs.body.unsetHeight);
+      if (!Transitions.supported()) { this.finishClose(); }
     });
   },
 
