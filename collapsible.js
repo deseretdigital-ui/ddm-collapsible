@@ -231,7 +231,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   setBodyHeight: function () {
-    // this.setTransitionDuration();
+    this.setTransitionDuration();
     this.refs.body.getDOMNode().style.height = this.getContentHeight();
   },
 
