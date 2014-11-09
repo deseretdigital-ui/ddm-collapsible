@@ -3,7 +3,7 @@
   height: 0;
   /* default closed */ }
   .ddm-collapsible--will-open > .ddm-collapsible__body {
-    height: 0; }
+    /* nothing special; here for symmetry */ }
   .ddm-collapsible--opening > .ddm-collapsible__body {
     -webkit-transition: height 0.3s;
     transition: height 0.3s;
@@ -14,10 +14,9 @@
     /* height: contentHeight; set by javascript */ }
   .ddm-collapsible--closing > .ddm-collapsible__body {
     -webkit-transition: height 0.3s;
-    transition: height 0.3s;
-    height: 0; }
+    transition: height 0.3s; }
   .ddm-collapsible--closed > .ddm-collapsible__body {
-    height: 0; }
+    /* nothing special; here for symmetry */ }
 
 .ddm-collapsible__head {
   cursor: pointer;
