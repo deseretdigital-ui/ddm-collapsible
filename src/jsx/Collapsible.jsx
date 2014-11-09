@@ -112,6 +112,7 @@ var Collapsible = React.createClass({
     this.setState({ willOpen: false, opening: true }, function () {
       this.refs.body.setTransitionDuration();
       this.after(this.hasOpeningClass, this.refs.body.setHeight);
+      if (!Transitions.supported()) { this.finishOpen(); }
     }.bind(this));
   },
 
@@ -150,6 +151,7 @@ var Collapsible = React.createClass({
     this.setState({ willClose: false, closing: true }, function () {
       this.refs.body.setTransitionDuration();
       this.after(this.readyToClose, this.refs.body.unsetHeight);
+      if (!Transitions.supported()) { this.finishClose(); }
     });
   },
 

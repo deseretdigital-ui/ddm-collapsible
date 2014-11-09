@@ -27,7 +27,7 @@ var Transitions = {
   },
 
   endEventName: function () {
-    /* adapted from https://github.com/facebook/react/blob/master/src/addons/transitions/ReactTransitionEvents.js */
+    if (!this.supported()) { return false; }
 
     var eventNames = {
       'transition': 'transitionend',
@@ -41,17 +41,12 @@ var Transitions = {
       delete eventNames['transition'];
     }
 
-    var styleName = this.styleName();
-    var eventName = false;
-
-    if (styleName !== false) {
-      eventName = eventNames[styleName];
-    }
-
-    return eventName;
+    return eventNames[this.styleName()];
   },
 
   addEndEventListener: function (element, handler, property, autoRemove) {
+    if (!this.supported()) { return false; }
+
     if (property) {
       handler = (function (originalHandler) {
         return function (event) {
@@ -77,10 +72,12 @@ var Transitions = {
   },
 
   removeEndEventListener: function (element, handler) {
+    if (!this.supported()) { return false; }
     element.removeEventListener(this.endEventName(), handler);
   },
 
   setDuration: function (element, duration) {
+    if (!this.supported()) { return false; }
     element.style[this.styleName() + 'Duration'] = duration;
   }
 };
