@@ -49,9 +49,9 @@ var CollapsibleBody = React.createClass({displayName: 'CollapsibleBody',
   }
 });
 
-var Collapsible = React.createClass({displayName: 'Collapsible',
+var oldbody;
 
-  /* props */
+var Collapsible = React.createClass({displayName: 'Collapsible',
 
   propTypes: {
     open: React.PropTypes.bool,
@@ -67,10 +67,6 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     }
   },
 
-
-
-  /* state */
-
   getInitialState: function() {
     return {
       open: this.props.open || false,
@@ -81,82 +77,21 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     }
   },
 
+  inTransition: function () {
+    return (
+      this.state.willOpen
+      || this.state.opening
+      || this.state.willClose
+      || this.state.closing
+    );
+  },
+
   isClosed: function () {
-    return !this.state.open && !this.state.willOpen && !this.state.willClose && !this.state.closing;
+    return !(
+      this.state.open
+      || this.inTransition()
+    );
   },
-
-  open: function () {
-    if (this.state.closing || this.state.opening || this.state.open) {
-      return; /* nothing to do or already doing something */
-    }
-
-    console.log('open');
-    this.props.onOpen(this);
-    this.setState({
-      willOpen: true
-    }, this.startOpen);
-  },
-
-  startOpen: function () {
-    console.log('startOpen');
-    this.setBodyHeight();
-    this.setState({
-      willOpen: false,
-      opening: true
-    }, this.transitionEnd(this.finishOpen));
-  },
-
-  finishOpen: function () {
-    console.log('finishOpen');
-    this.setState({
-      opening: false,
-      open: true
-    }, this.unsetBodyHeight);
-  },
-
-  close: function () {
-    if (this.opening || this.closing || this.isClosed()) {
-      return; /* nothing to do or already doing something */
-    }
-
-    console.log('close');
-    this.props.onClose(this);
-    this.setBodyHeight();
-    setTimeout(function () { /* wait for height to set */
-      this.setState({
-        open: false,
-        willClose: true,
-      }, this.startClose);
-    }.bind(this), 1)
-  },
-
-  startClose: function () {
-    console.log('startClose');
-    this.unsetBodyHeight();
-    this.setState({
-      willClose: false,
-      closing: true
-    }, this.transitionEnd(this.finishClose));
-  },
-
-  finishClose: function () {
-    console.log('finishClose');
-    this.setState({
-      closing: false
-    });
-  },
-
-  toggle: function () {
-    if (this.state.open) {
-      this.close();
-    } else {
-      this.open();
-    }
-  },
-
-
-
-  /* render */
 
   render: function () {
     return (
@@ -201,26 +136,102 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   renderBody: function (child) {
     return React.addons.cloneWithProps(child, {
-      ref: 'body'
+      ref: 'body',
+      key: 'body'
     });
   },
 
-
-
-  /* handlers */
-
   handleHeadClick: function (event) {
     console.log('handleHeadClick');
-    this.toggle();
+    setTimeout(function () {
+      this.toggle();
+    }.bind(this), 0)
   },
 
+  toggle: function () {
+    console.log(this.state);
+    if (this.state.open) {
+      this.close();
+    } else if (this.isClosed()) {
+      this.open();
+    }
+  },
 
+  open: function () {
+    if (this.inTransition() || this.state.open) {
+      return; /* nothing to do or already doing something */
+    }
 
-  /* DOM */
+    console.log('open');
+    this.props.onOpen(this);
+    this.setState({
+      willOpen: true
+    }, this.startOpen);
+  },
+
+  startOpen: function () {
+    console.log('startOpen');
+    this.setBodyHeight();
+    this.setState({
+      willOpen: false,
+      opening: true
+    }, this.transitionEnd(this.finishOpen));
+  },
+
+  finishOpen: function () {
+    console.log('finishOpen');
+    this.setState({
+      opening: false,
+      open: true
+    }, this.unsetBodyHeight);
+  },
+
+  close: function () {
+    if (this.inTransition() || this.isClosed()) {
+      return; /* nothing to do or already doing something */
+    }
+
+    console.log('close');
+    this.props.onClose(this);
+    this.setBodyHeight();
+    this.setState({
+      open: false,
+      willClose: true
+    }, this.startClose);
+  },
+
+  startClose: function () {
+    console.log('startClose');
+    this.transitionEnd(this.finishClose);
+    this.setState({
+      willClose: false,
+      closing: true
+    }, function () {
+      this.after(this.readyToClose, this.unsetBodyHeight);
+    });
+  },
+
+  readyToClose: function () {
+    var ready = (
+      this.hasClosingClass()
+      && this.hasBodyHeight()
+    );
+    console.log('ready: ' + ready);
+    return ready;
+  },
+
+  finishClose: function () {
+    console.log('finishClose');
+    this.setState({
+      closing: false
+    }, function () {
+      console.log('==================');
+    });
+  },
 
   setBodyHeight: function () {
     console.log('setBodyHeight');
-    this.refs.body.getDOMNode().style.height = this.getContentHeight() + 'px';
+    this.refs.body.getDOMNode().style.height = this.getContentHeight();
   },
 
   unsetBodyHeight: function () {
@@ -229,27 +240,34 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   getContentHeight: function () {
-    return this.refs.body.refs.content.getDOMNode().offsetHeight;
+    return this.refs.body.refs.content.getDOMNode().offsetHeight + 'px';
   },
 
   transitionEnd: function (callback) {
+    console.log('transitionEnd');
     var eventName = this.transitionEndEventName();
-    if (!eventName) {
-      console.log('transition not supported');
-      callback(); /* transition not supported */
-      return;
-    }
-
     var body = this.refs.body.getDOMNode();
-    var newCallback = function (event) {
-      console.log('transition supported');
+    if (oldbody === null) {
+      oldbody = body;
+    }
+    if (oldbody !== body) {
+      console.log('different body');
+    }
+    oldbody = body;
+    var handler = function (event) {
+      console.log('transitionend handler');
       if (event.propertyName === 'height') {
         callback();
-        body.removeEventListener(eventName, newCallback);
+        console.log('remove transitionend handler');
+        body.removeEventListener(eventName, handler);
       }
     };
 
-    body.addEventListener(eventName, newCallback, false);
+    body.addEventListener(eventName, handler, false);
+  },
+
+  transitionSupported: function () {
+    return this.transitionEndEventName() !== false;
   },
 
   transitionEndEventName: (function () { /* iife to reduce redundant calculations; trying to avoid dependencies */
@@ -280,7 +298,50 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     return function () {
       return eventName;
     };
-  })()
+  })(),
+
+  after: function (check, action, limit) {
+    limit = limit === undefined ? 10 : limit;
+    console.log('after: ' + limit);
+    if (check()) {
+      action();
+    } else if (limit > 1) {
+      setTimeout(function () {
+        this.after(check, action, --limit);
+      }.bind(this), 0);
+    }
+  },
+
+  hasClosingClass: function () {
+    var hasClosingClass = this.hasClass(this.getDOMNode(), 'ddm-collapsible--closing');
+    console.log('hasClosingClass: ' + hasClosingClass);
+    return hasClosingClass;
+  },
+
+  hasBodyHeight: function () {
+    var bodyHeight = this.refs.body.getDOMNode().style.height;
+    var contentHeight = this.getContentHeight();
+    var hasBodyHeight = bodyHeight === contentHeight;
+    console.log('hasBodyHeight: ' + hasBodyHeight);
+    if (!hasBodyHeight) {
+      console.log({
+        bodyHeight: bodyHeight,
+        contentHeight: contentHeight
+      });
+    }
+    return hasBodyHeight;
+  },
+
+  hasClass: function (element, className) {
+    var hasClass = false;
+    if (element.classList) {
+      hasClass =  element.classList.contains(className);
+    } else {
+      hasClass = new RegExp('(^| )' + className + '( |$)', 'gi').test(element.className);
+    }
+    console.log('hasClass: ' + hasClass);
+    return hasClass;
+  }
 
 
 

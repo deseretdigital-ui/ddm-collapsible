@@ -13,8 +13,6 @@
   .ddm-collapsible--open > .ddm-collapsible__body {
     height: auto; }
   .ddm-collapsible--will-close > .ddm-collapsible__body {
-    -webkit-transition: height 0.3s;
-    transition: height 0.3s;
     /* height: contentHeight; set by javascript */ }
   .ddm-collapsible--closing > .ddm-collapsible__body {
     -webkit-transition: height 0.3s;
@@ -43,9 +41,9 @@
     .csstransforms .ddm-collapsible__arrow:before {
       -webkit-transition: all 0.2s;
       transition: all 0.2s; }
-    .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+    .ddm-collapsible--opening > .ddm-collapsible__head > .ddm-collapsible__arrow:before, .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
       content: "\25be"; }
-      .csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+      .csstransforms .ddm-collapsible--opening > .ddm-collapsible__head > .ddm-collapsible__arrow:before, .csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
         content: "\25b8";
         -webkit-transform: rotate(90deg);
         /* Safari */
