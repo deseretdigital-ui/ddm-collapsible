@@ -1,10 +1,22 @@
 .ddm-collapsible__body {
   overflow: hidden;
-  height: 0; }
-
-.ddm-collapsible__body--transition {
-  -webkit-transition: height 0.3s;
-  transition: height 0.3s; }
+  height: 0;
+  /* default closed */ }
+  .ddm-collapsible--will-open > .ddm-collapsible__body {
+    /* nothing special; here for symmetry */ }
+  .ddm-collapsible--opening > .ddm-collapsible__body {
+    -webkit-transition: height 0.3s;
+    transition: height 0.3s;
+    /* height: contentHeight; set by javascript */ }
+  .ddm-collapsible--open > .ddm-collapsible__body {
+    height: auto; }
+  .ddm-collapsible--will-close > .ddm-collapsible__body {
+    /* height: contentHeight; set by javascript */ }
+  .ddm-collapsible--closing > .ddm-collapsible__body {
+    -webkit-transition: height 0.3s;
+    transition: height 0.3s; }
+  .ddm-collapsible--closed > .ddm-collapsible__body {
+    /* nothing special; here for symmetry */ }
 
 .ddm-collapsible__head {
   cursor: pointer;
@@ -26,9 +38,9 @@
     .csstransforms .ddm-collapsible__arrow:before {
       -webkit-transition: all 0.2s;
       transition: all 0.2s; }
-    .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+    .ddm-collapsible--opening > .ddm-collapsible__head > .ddm-collapsible__arrow:before, .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
       content: "\25be"; }
-      .csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
+      .csstransforms .ddm-collapsible--opening > .ddm-collapsible__head > .ddm-collapsible__arrow:before, .csstransforms .ddm-collapsible--open > .ddm-collapsible__head > .ddm-collapsible__arrow:before {
         content: "\25b8";
         -webkit-transform: rotate(90deg);
         /* Safari */
