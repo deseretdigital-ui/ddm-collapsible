@@ -69,8 +69,32 @@
     <script type="text/jsx">
     React.render(
       <CollapsibleGroup accordion={true}>
-        <Collapsible>
+        <Collapsible open={true}>
           <CollapsibleHead href="http://google.com">Hello World</CollapsibleHead>
+          <CollapsibleBody>
+            <ul>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+            </ul>
+          </CollapsibleBody>
+        </Collapsible>
+        <Collapsible>
+          <CollapsibleHead>Hello World</CollapsibleHead>
+          <CollapsibleBody>
+            <ul>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+              <li>Item 1</li>
+            </ul>
+          </CollapsibleBody>
+        </Collapsible>
+        <Collapsible>
+          <CollapsibleHead>Hello World</CollapsibleHead>
           <CollapsibleBody>
             <ul>
               <li>Item 1</li>
