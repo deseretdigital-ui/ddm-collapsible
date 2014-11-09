@@ -63,7 +63,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
       open: null,
       onOpen: function () {},
       onClose: function () {},
-      speed: 800 /* pixels per second */
+      speed: 700 /* pixels per second */
     }
   },
 
@@ -161,6 +161,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   startOpen: function () {
     this.transitionEnd(this.finishOpen);
+    this.setTransitionDuration();
     this.setState({ willOpen: false, opening: true }, function () {
       this.after(this.hasOpeningClass, this.setBodyHeight);
     }.bind(this));
@@ -186,6 +187,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
 
   prepareClose: function () {
     this.setBodyHeight();
+    this.setTransitionDuration();
     this.setState({ open: false, willClose: true }, this.startClose);
   },
 
@@ -225,6 +227,7 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
   },
 
   setBodyHeight: function () {
+    this.setTransitionDuration();
     this.refs.body.getDOMNode().style.height = this.getContentHeight();
   },
 
