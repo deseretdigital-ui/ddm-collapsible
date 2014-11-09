@@ -147,15 +147,21 @@ var Collapsible = React.createClass({displayName: 'Collapsible',
     this.props.onOpen(this);
 
     // prepare to open
-    this.setState({ willOpen: true });
-    this.transitionEnd(this.finishOpen);
-
-    // start open
-    this.setState({ willOpen: false, opening: true }, this.setBodyHeight);
-  },
-
-  finishOpen: function () {
-    this.setState({ opening: false, open: true }, this.unsetBodyHeight);
+    this.setState({ willOpen: true }, function () {
+      this.after(function () {
+        return this.hasClass(this.getDOMNode(), 'ddm-collapsible--will-open');
+      }.bind(this), function () {
+        this.transitionEnd(function () {
+          // finish open
+          this.setState({ opening: false, open: true }, this.unsetBodyHeight);
+        }.bind(this));
+        this.setState({ willOpen: false, opening: true }, function () {
+          this.after(function () {
+            return this.hasClass(this.getDOMNode(), 'ddm-collapsible--opening');
+          }.bind(this), this.setBodyHeight); // start open
+        }.bind(this));
+      }.bind(this));
+    }.bind(this));
   },
 
   close: function () {
