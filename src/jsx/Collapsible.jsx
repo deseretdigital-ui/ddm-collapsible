@@ -109,7 +109,7 @@ var Collapsible = React.createClass({
   },
 
   startOpen: function () {
-    this.transitionEnd(this.finishOpen);
+    this.addTransitionEndHandler(this.finishOpen);
     this.setState({ willOpen: false, opening: true }, function () {
       this.setTransitionDuration();
       this.after(this.hasOpeningClass, this.setBodyHeight);
@@ -147,7 +147,7 @@ var Collapsible = React.createClass({
   },
 
   startClose: function () {
-    this.transitionEnd(this.finishClose);
+    this.addTransitionEndHandler(this.finishClose);
     this.setState({ willClose: false, closing: true }, function () {
       this.setTransitionDuration();
       this.after(this.readyToClose, this.unsetBodyHeight);
@@ -160,6 +160,13 @@ var Collapsible = React.createClass({
       && this.hasBodyHeight()
     );
     return ready;
+  },
+
+  hasBodyHeight: function () {
+    var bodyHeight = this.refs.body.getDOMNode().style.height;
+    var contentHeight = this.getContentHeight();
+    var hasBodyHeight = bodyHeight === contentHeight;
+    return hasBodyHeight;
   },
 
   hasClosingClass: function () {
@@ -197,85 +204,110 @@ var Collapsible = React.createClass({
   },
 
   unsetTransitionDuration: function () {
-    var styleName = this.transitionStyleName() + 'Duration';
-    this.refs.body.getDOMNode().style[styleName] = null;
+    this.transition.setDuration(this.refs.body.getDOMNode(), null);
+  },
+
+  addTransitionEndHandler: function (handler) {
+    return this.transition.addEndEventListener(this.refs.body.getDOMNode(), handler, 'height');
   },
 
   setTransitionDuration: function () {
     var contentHeight = parseInt(this.getContentHeight(), 10);
-    var duration = contentHeight / this.props.speed;
-    var styleName = this.transitionStyleName() + 'Duration';
-    this.refs.body.getDOMNode().style[styleName] = duration + 's';
+    var duration = (contentHeight / this.props.speed) + 's';
+    this.transition.setDuration(this.refs.body.getDOMNode(), duration);
   },
 
   getContentHeight: function () {
     return this.refs.body.refs.content.getDOMNode().offsetHeight + 'px';
   },
 
-  transitionEnd: function (callback) {
-    var eventName = this.transitionEndEventName();
-    var body = this.refs.body.getDOMNode();
-    var handler = function (event) {
-      if (event.propertyName === 'height') {
-        callback();
-        body.removeEventListener(eventName, handler);
+  // helpers; highly reusable; candidate for graduation
+  transition: {
+
+    supported: function () {
+      return this.styleName() !== false;
+    },
+
+    styleName: function () {
+      var styleNames = [
+        'transition',
+        'WebkitTransition',
+        'MozTransition',
+        'OTransition',
+        'msTransition'
+      ];
+
+      var style = document.createElement('div').style;
+      var styleName = false;
+
+      for (var i = 0; i < styleNames.length; i++) {
+        var key = styleNames[i];
+        if (key in style) {
+          styleName = key;
+          break;
+        }
       }
-    };
 
-    body.addEventListener(eventName, handler, false);
-  },
+      return styleName;
+    },
 
-  transitionSupported: function () {
-    return this.transitionEndEventName() !== false;
-  },
+    endEventName: function () {
+      /* adapted from https://github.com/facebook/react/blob/master/src/addons/transitions/ReactTransitionEvents.js */
 
-  transitionEndEventName: function () {
-    /* adapted from https://github.com/facebook/react/blob/master/src/addons/transitions/ReactTransitionEvents.js */
+      var eventNames = {
+        'transition': 'transitionend',
+        'WebkitTransition': 'webkitTransitionEnd',
+        'MozTransition': 'mozTransitionEnd',
+        'OTransition': 'oTransitionEnd',
+        'msTransition': 'MSTransitionEnd'
+      };
 
-    var eventNames = {
-      'transition': 'transitionend',
-      'WebkitTransition': 'webkitTransitionEnd',
-      'MozTransition': 'mozTransitionEnd',
-      'OTransition': 'oTransitionEnd',
-      'msTransition': 'MSTransitionEnd'
-    };
-
-    if (!('TransitionEvent' in window)) {
-      delete eventNames['transition'];
-    }
-
-    var style = document.createElement('div').style;
-    var styleName = this.transitionStyleName();
-    var eventName = false;
-
-    if (styleName !== false) {
-      eventName = eventNames[styleName];
-    }
-
-    return eventName;
-  },
-
-  transitionStyleName: function () {
-    var styleNames = [
-      'transition',
-      'WebkitTransition',
-      'MozTransition',
-      'OTransition',
-      'msTransition'
-    ];
-
-    var style = document.createElement('div').style;
-    var styleName = false;
-
-    for (var i = 0; i < styleNames.length; i++) {
-      var key = styleNames[i];
-      if (key in style) {
-        styleName = key;
-        break;
+      if (!('TransitionEvent' in window)) {
+        delete eventNames['transition'];
       }
-    }
 
-    return styleName;
+      var styleName = this.styleName();
+      var eventName = false;
+
+      if (styleName !== false) {
+        eventName = eventNames[styleName];
+      }
+
+      return eventName;
+    },
+
+    addEndEventListener: function (element, handler, property, autoRemove) {
+      if (property) {
+        handler = (function (originalHandler) {
+          return function (event) {
+            if (event.propertyName === property) {
+              originalHandler(event);
+            }
+          };
+        })(handler);
+      }
+
+      if (autoRemove !== false) {
+        var remove = this.removeEndEventListener.bind(this);
+        handler = (function (originalHandler) {
+          return function (event) {
+            originalHandler(event);
+            remove(element, handler);
+          };
+        })(handler);
+      }
+
+      element.addEventListener(this.endEventName(), handler, false);
+      return handler; /* returns new handler for removal */
+    },
+
+    removeEndEventListener: function (element, handler) {
+      element.removeEventListener(this.endEventName(), handler);
+    },
+
+    setDuration: function (element, duration) {
+      element.style[this.styleName() + 'Duration'] = duration;
+    }
   },
 
   after: function (check, action, limit) {
@@ -287,13 +319,6 @@ var Collapsible = React.createClass({
         this.after(check, action, --limit);
       }.bind(this), 0);
     }
-  },
-
-  hasBodyHeight: function () {
-    var bodyHeight = this.refs.body.getDOMNode().style.height;
-    var contentHeight = this.getContentHeight();
-    var hasBodyHeight = bodyHeight === contentHeight;
-    return hasBodyHeight;
   },
 
   hasClass: function (element, className) {
