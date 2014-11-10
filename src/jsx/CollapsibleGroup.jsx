@@ -60,7 +60,7 @@ var CollapsibleGroup = React.createClass({
       key: 'ddmCollapsible' + index,
       ref: 'ddmCollapsible' + index,
       index: index,
-      open: child.props.open === undefined ? this.props.open : child.props.open,
+      open: child.props.open === null ? this.props.open : child.props.open,
       onOpen: this.handleCollapsibleOpen
     });
 

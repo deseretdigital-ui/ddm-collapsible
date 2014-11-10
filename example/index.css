@@ -1,6 +1,4 @@
 .primary-nav {
-  background-color: #0b162f;
-  color: #fff;
   width: 320px;
 }
 
@@ -29,6 +27,38 @@ a:hover {
 }
 
 .ddm-collapsible__head {
-  background: #999;
-  border-top: 1px solid #e1e1e1;
+  padding: 5px;
+  color: #fff;
+  background-color: #555;
+  border-bottom: 1px solid #666;
+}
+
+.ddm-collapsible:last-child > .ddm-collapsible__head {
+  border-bottom: 0 none;
+}
+
+.ddm-collapsible,
+.ddm-collapsible-group {
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid #555;
+}
+
+.ddm-collapsible__body {
+  background-color: #eee;
+}
+
+.ddm-collapsible-group .ddm-collapsible,
+.ddm-collapsible .ddm-collapsible,
+.ddm-collapsible-group .ddm-collapsible-group {
+  border-radius: 0;
+  border: 0 none;
+}
+
+.ddm-collapsible-group .ddm-collapsible-group > .ddm-collapsible  > .ddm-collapsible__head {
+  background-color: #999;
+}
+
+.ddm-collapsible__arrow {
+  line-height: 28px;
 }

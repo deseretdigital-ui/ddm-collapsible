@@ -1,10 +1,32 @@
 .ddm-collapsible__body {
   overflow: hidden;
-  max-height: 0;
+  height: 0; /* default closed */
 
-  .ddm-collapsible--mounted > & {
-    -webkit-transition: max-height .3s;
-    transition: max-height .3s;
+  .ddm-collapsible--will-open > & {
+    /* nothing special; here for symmetry */
+  }
+
+  .ddm-collapsible--opening > & {
+    -webkit-transition: height .3s;
+    transition: height .3s;
+    /* height: contentHeight; set by javascript */
+  }
+
+  .ddm-collapsible--open > & {
+    height: auto;
+  }
+
+  .ddm-collapsible--will-close > & {
+    /* height: contentHeight; set by javascript */
+  }
+
+  .ddm-collapsible--closing > & {
+    -webkit-transition: height .3s;
+    transition: height .3s;
+  }
+
+  .ddm-collapsible--closed > & {
+    /* nothing special; here for symmetry */
   }
 }
 
@@ -33,6 +55,7 @@
       transition: all .2s;
     }
 
+    .ddm-collapsible--opening > .ddm-collapsible__head > &,
     .ddm-collapsible--open > .ddm-collapsible__head > & {
       content: "\25be";
 
