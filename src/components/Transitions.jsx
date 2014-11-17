@@ -81,3 +81,5 @@ var Transitions = {
     element.style[this.styleName() + 'Duration'] = duration;
   }
 };
+
+module.exports = Transitions;

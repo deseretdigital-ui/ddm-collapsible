@@ -1,3 +1,5 @@
+var React = require('react/addons');
+
 var CollapsibleHead = React.createClass({
 
   /* react hooks */
@@ -36,3 +38,5 @@ var CollapsibleHead = React.createClass({
   }
 
 });
+
+module.exports = CollapsibleHead;

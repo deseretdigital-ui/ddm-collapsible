@@ -1,3 +1,6 @@
+var React = require('react/addons');
+var Collapsible = require('./Collapsible');
+
 var CollapsibleGroup = React.createClass({
 
   /* react hooks */
@@ -68,3 +71,5 @@ var CollapsibleGroup = React.createClass({
   }
 
 });
+
+module.exports = CollapsibleGroup;
