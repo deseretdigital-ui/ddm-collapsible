@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "react": "0.12",
-    "es5-shim": "~4.0.3"
+    "es5-shim": "~4.0.3",
+    "transition-helpers": "git@github.com:deseretdigital-ui/transition-helpers.git#~0.0.2"
   }
 }

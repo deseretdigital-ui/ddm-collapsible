@@ -1,5 +1,5 @@
 var React = require('react/addons');
-var Transitions = require('./Transitions');
+var Transitions = require('transition-helpers');
 
 var CollapsibleBody = React.createClass({
   propTypes: {

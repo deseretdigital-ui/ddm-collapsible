@@ -2,7 +2,7 @@ var React = require('react/addons');
 var cx = React.addons.classSet;
 var CollapsibleHead = require('./CollapsibleHead');
 var CollapsibleBody = require('./CollapsibleBody');
-var Transitions = require('./Transitions');
+var Transitions = require('transition-helpers');
 
 var Collapsible = React.createClass({
 
