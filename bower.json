@@ -4,13 +4,7 @@
     "Joshua Stoutenburg <jstoutenburg@deseretdigital.com>"
   ],
   "description": "Collapsible component for DDM projects.",
-  "main": [
-    "dist/collapsible.js",
-    "dist/collapsible.css"
-  ],
-  "moduleType": [
-    "globals"
-  ],
+  "main": "dist/collapsible.js",
   "keywords": [
     "ui",
     "collapsible",
@@ -22,10 +16,12 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "src"
+    "src",
+    "gulp"
   ],
   "dependencies": {
     "react": "0.12",
-    "es5-shim": "~4.0.3"
+    "es5-shim": "~4.0.3",
+    "transition-helpers": "git@github.com:deseretdigital-ui/transition-helpers.git#~0.0.2"
   }
 }

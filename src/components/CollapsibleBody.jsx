@@ -1,3 +1,6 @@
+var React = require('react/addons');
+var Transitions = require('transition-helpers');
+
 var CollapsibleBody = React.createClass({
   propTypes: {
     speed: React.PropTypes.number
@@ -53,3 +56,5 @@ var CollapsibleBody = React.createClass({
   }
 
 });
+
+module.exports = CollapsibleBody;
