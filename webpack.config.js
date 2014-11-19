@@ -19,8 +19,18 @@ module.exports = {
     ]
   },
   externals: {
-    "react": "React",
-    "react/addons": "React"
+    react: {
+      root: "React",
+      commonjs: "react",
+      commonjs2: "react",
+      amd: "react"
+    },
+    "react/addons": {
+      root: "React",
+      commonjs: "react/addons",
+      commonjs2: "react/addons",
+      amd: "react/addons"
+    }
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
