@@ -137,7 +137,13 @@ var Collapsible = React.createClass({
     return this.hasClass(this.getDOMNode(), 'ddm-collapsible--open');
   },
 
-  close: function () {
+  close: function (withTransition) {
+    if (withTransition === false) {
+      this.props.onClose(this);
+      this.forceClose();
+      return;
+    }
+
     if (this.inTransition() || this.isClosed()) {
       return; /* nothing to do or already doing something */
     }
@@ -177,6 +183,16 @@ var Collapsible = React.createClass({
   finishClose: function () {
     this.refs.body.unsetTransitionDuration();
     this.setState({ closing: false });
+  },
+
+  forceClose: function() {
+    this.setState({
+      open: false,
+      willOpen: false,
+      opening: false,
+      willClose: false,
+      closing: false
+    });
   },
 
   isClosed: function () {
