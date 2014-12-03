@@ -40,6 +40,15 @@ module.exports = React.createClass({ displayName: 'CollapsibleGroup',
     }
   },
 
+  close: function () {
+    for (var key in this.refs) {
+      var ref = this.refs[key];
+      var isCollapsible = ref.type !== Collapsible.type;
+      if (!isCollapsible) { continue; }
+      ref.close();
+    }
+  },
+
   closeOtherCollapsibles: function (collapsible) {
     for (var key in this.refs) {
       var ref = this.refs[key];
