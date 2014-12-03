@@ -1,7 +1,8 @@
 var React = require('react/addons');
 var Transitions = require('transition-helpers');
 
-var CollapsibleBody = React.createClass({
+module.exports = React.createClass({ displayName: 'CollapsibleBody',
+
   propTypes: {
     speed: React.PropTypes.number
   },
@@ -14,12 +15,21 @@ var CollapsibleBody = React.createClass({
 
   render: function () {
     return (
-      <div className="ddm-collapsible__body" key="body">
-        <div className="ddm-collapsible__content" ref="content">
-          {this.props.children}
-        </div>
+      <div className={this.getClasses()} key="body">
+        {this.props.children}
       </div>
     );
+  },
+
+  getClasses: function () {
+    var classes = {
+      'ddm-collapsible__body': true
+    };
+
+    return [
+      React.addons.classSet(classes),
+      this.props.className
+    ].join(' ');
   },
 
   setHeight: function () {
@@ -38,7 +48,13 @@ var CollapsibleBody = React.createClass({
   },
 
   getContentHeight: function () {
-    return this.refs.content.getDOMNode().offsetHeight;
+    var height = 0;
+    var children = this.getDOMNode().children;
+    var limit = children.length;
+    for (var i = 0; i < limit; i++) {
+      height += children[i].offsetHeight;
+    }
+    return height;
   },
 
   addTransitionEndHandler: function (handler) {
@@ -56,5 +72,3 @@ var CollapsibleBody = React.createClass({
   }
 
 });
-
-module.exports = CollapsibleBody;

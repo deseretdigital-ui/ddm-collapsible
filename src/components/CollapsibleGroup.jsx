@@ -1,9 +1,7 @@
 var React = require('react/addons');
 var Collapsible = require('./Collapsible');
 
-var CollapsibleGroup = React.createClass({
-
-  /* react hooks */
+module.exports = React.createClass({ displayName: 'CollapsibleGroup',
 
   propTypes: {
     accordion: React.PropTypes.bool,
@@ -19,29 +17,28 @@ var CollapsibleGroup = React.createClass({
 
   render: function () {
     return (
-      <div className="ddm-collapsible-group">
+      <div className={this.getClasses()}>
         {this.renderChildren()}
       </div>
     );
   },
 
+  getClasses: function () {
+    var classes = {
+      'ddm-collapsible-group': true
+    };
 
-
-  /* event handlers */
+    return [
+      React.addons.classSet(classes),
+      this.props.className
+    ].join(' ');
+  },
 
   handleCollapsibleOpen: function (collapsible) {
     if (this.props.accordion) {
       this.closeOtherCollapsibles(collapsible);
     }
   },
-
-
-
-  /* methods */
-
-
-
-  /* helpers */
 
   closeOtherCollapsibles: function (collapsible) {
     for (var key in this.refs) {
@@ -71,5 +68,3 @@ var CollapsibleGroup = React.createClass({
   }
 
 });
-
-module.exports = CollapsibleGroup;

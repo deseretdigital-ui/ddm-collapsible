@@ -1,8 +1,6 @@
 var React = require('react/addons');
 
-var CollapsibleHead = React.createClass({
-
-  /* react hooks */
+module.exports = React.createClass({ displayName: 'CollapsibleHead',
 
   propTypes: {
     href: React.PropTypes.string,
@@ -18,11 +16,22 @@ var CollapsibleHead = React.createClass({
 
   render: function () {
     return (
-      <div className="ddm-collapsible__head" onClick={this.props.onClick}>
+      <div className={this.getClasses()} onClick={this.props.onClick}>
         {this.renderChildren()}
         <span className="ddm-collapsible__arrow"></span>
       </div>
     );
+  },
+
+  getClasses: function () {
+    var classes = {
+      'ddm-collapsible__head': true
+    };
+
+    return [
+      React.addons.classSet(classes),
+      this.props.className
+    ].join(' ');
   },
 
   renderChildren: function () {
@@ -38,5 +47,3 @@ var CollapsibleHead = React.createClass({
   }
 
 });
-
-module.exports = CollapsibleHead;
