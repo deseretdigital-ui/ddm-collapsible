@@ -1,10 +1,9 @@
 var React = require('react/addons');
-var cx = React.addons.classSet;
 var CollapsibleHead = require('./CollapsibleHead');
 var CollapsibleBody = require('./CollapsibleBody');
 var Transitions = require('transition-helpers');
 
-var Collapsible = React.createClass({
+module.exports = React.createClass({ displayName: 'Collapsible',
 
   propTypes: {
     open: React.PropTypes.bool,
@@ -16,8 +15,7 @@ var Collapsible = React.createClass({
     return {
       open: null,
       onOpen: function () {},
-      onClose: function () {},
-      speed: 700 /* pixels per second */
+      onClose: function () {}
     }
   },
 
@@ -40,7 +38,7 @@ var Collapsible = React.createClass({
   },
 
   getClassNames: function () {
-    return cx({
+    var classes = {
       'ddm-collapsible': true,
       'ddm-collapsible--will-open': this.state.willOpen,
       'ddm-collapsible--opening': this.state.opening,
@@ -48,7 +46,12 @@ var Collapsible = React.createClass({
       'ddm-collapsible--will-close': this.state.willClose,
       'ddm-collapsible--closing': this.state.closing,
       'ddm-collapsible--closed': this.isClosed()
-    });
+    };
+
+    return [
+      React.addons.classSet(classes),
+      this.props.className
+    ].join(' ');
   },
 
   renderChildren: function () {
@@ -234,5 +237,3 @@ var Collapsible = React.createClass({
   }
 
 });
-
-module.exports = Collapsible;

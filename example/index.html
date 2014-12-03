@@ -26,10 +26,10 @@
     </div>
     <script type="text/jsx">
     React.render(
-      <CollapsibleGroup>
-        <Collapsible open={true}>
-          <CollapsibleHead href="http://google.com">Hello World</CollapsibleHead>
-          <CollapsibleBody>
+      <CollapsibleGroup className="my-collapsible-group">
+        <Collapsible open={true} className="my-collapsible">
+          <CollapsibleHead className="my-collapsible__head" href="http://google.com">Hello World</CollapsibleHead>
+          <CollapsibleBody className="my-collapsible__body">
             <ul>
               <li>Item 1</li>
               <li>Item 1</li>
