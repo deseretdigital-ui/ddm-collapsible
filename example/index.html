@@ -264,5 +264,84 @@
     </script>
   </div>
 
+  <div class="example">
+    <h2>Close CollapsibleGroup</h2>
+
+    <div class="primary-nav">
+      <div id="react-example-7"></div>
+    </div>
+    <script type="text/jsx">
+    var Example7 = React.createClass({
+      render: function () {
+        return (
+          <div className="useless-react-example-7-wrapper">
+            <button onClick={this.close}>Close Em</button>
+            <CollapsibleGroup open={true} ref="collapsibles">
+              <Collapsible>
+                <CollapsibleHead href="http://google.com">Hello World</CollapsibleHead>
+                <CollapsibleBody>
+                  <ul>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                  </ul>
+                </CollapsibleBody>
+              </Collapsible>
+              <Collapsible>
+                <CollapsibleHead>Hello World</CollapsibleHead>
+                <CollapsibleBody>
+                  <ul>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                  </ul>
+                </CollapsibleBody>
+              </Collapsible>
+              <Collapsible>
+                <CollapsibleHead>Hello World</CollapsibleHead>
+                <CollapsibleBody>
+                  <ul>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                  </ul>
+                </CollapsibleBody>
+              </Collapsible>
+              <Collapsible>
+                <CollapsibleHead>Hello World</CollapsibleHead>
+                <CollapsibleBody>
+                  <ul>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                    <li>Item 1</li>
+                  </ul>
+                </CollapsibleBody>
+              </Collapsible>
+            </CollapsibleGroup>
+          </div>
+        );
+      },
+
+      close: function () {
+        this.refs.collapsibles.close();
+      }
+    });
+
+    React.render(
+      <Example7 />,
+      document.getElementById('react-example-7')
+    );
+
+    </script>
+  </div>
+
 </body>
 </html>
