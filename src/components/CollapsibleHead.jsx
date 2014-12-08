@@ -1,4 +1,5 @@
 var React = require('react/addons');
+var doesBrowserSupportCssTransforms = require('../util/doesBrowserSupportCssTransforms');
 
 module.exports = React.createClass({ displayName: 'CollapsibleHead',
 
@@ -21,6 +22,10 @@ module.exports = React.createClass({ displayName: 'CollapsibleHead',
         <span className="ddm-collapsible__arrow"></span>
       </div>
     );
+  },
+
+  componentDidMount: function () {
+    doesBrowserSupportCssTransforms();
   },
 
   getClasses: function () {
