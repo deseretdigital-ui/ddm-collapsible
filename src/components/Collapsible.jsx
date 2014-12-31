@@ -2,6 +2,7 @@ var React = require('react/addons');
 var CollapsibleHead = require('./CollapsibleHead');
 var CollapsibleBody = require('./CollapsibleBody');
 var Transitions = require('transition-helpers');
+var emptyFunction = require('../util/emptyFunction');
 
 module.exports = React.createClass({ displayName: 'Collapsible',
 
@@ -14,8 +15,8 @@ module.exports = React.createClass({ displayName: 'Collapsible',
   getDefaultProps: function () {
     return {
       open: null,
-      onOpen: function () {},
-      onClose: function () {}
+      onOpen: emptyFunction,
+      onClose: emptyFunction
     }
   },
 
