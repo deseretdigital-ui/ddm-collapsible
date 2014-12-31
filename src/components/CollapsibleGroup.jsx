@@ -1,6 +1,5 @@
 var React = require('react/addons');
 var Collapsible = require('./Collapsible');
-var emptyFunction = require('../util/emptyFunction');
 
 module.exports = React.createClass({ displayName: 'CollapsibleGroup',
 
@@ -67,32 +66,24 @@ module.exports = React.createClass({ displayName: 'CollapsibleGroup',
   renderChild: function (child, index) {
     if (child.type !== Collapsible.type) { return child; }
 
-    var self = this;
-
-    var onOpen = this.handleCollapsibleOpen;
-    if (child.props.onOpen !== emptyFunction) {
-      // Save the current onOpen for later use
-      if (child.props._cgPreviousOnOpen === undefined) {
-        child.props._cgPreviousOnOpen = child.props.onOpen;
-      }
-
-      // Make a new function that calls the old onOpen and then the CollapsibleGroup's
-      // handleCollapsible
-      onOpen = function(collapsible) {
-        child.props._cgPreviousOnOpen(collapsible);
-        self.handleCollapsibleOpen(collapsible);
-      }
-    }
-
     child = React.addons.cloneWithProps(child, {
       key: 'ddmCollapsible' + index,
       ref: 'ddmCollapsible' + index,
       index: index,
       open: child.props.open === null ? this.props.open : child.props.open,
-      onOpen: onOpen
+      onOpen: this.getOnOpenMethod(child)
     });
 
     return child;
+  },
+
+  getOnOpenMethod: function(child) {
+    var group = this;
+
+    return function (collapsible) {
+      child.props.onOpen(collapsible);
+      group.handleCollapsibleOpen(collapsible);
+    }
   }
 
 });
