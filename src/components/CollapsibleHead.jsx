@@ -1,5 +1,6 @@
 var React = require('react/addons');
 var doesBrowserSupportCssTransforms = require('../util/doesBrowserSupportCssTransforms');
+var emptyFunction = require('../util/emptyFunction');
 
 module.exports = React.createClass({ displayName: 'CollapsibleHead',
 
@@ -11,7 +12,7 @@ module.exports = React.createClass({ displayName: 'CollapsibleHead',
   getDefaultProps: function() {
     return {
       href: null,
-      onClick: function () {}
+      onClick: emptyFunction
     }
   },
 

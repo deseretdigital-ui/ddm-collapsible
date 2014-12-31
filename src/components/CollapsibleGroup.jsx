@@ -65,15 +65,25 @@ module.exports = React.createClass({ displayName: 'CollapsibleGroup',
 
   renderChild: function (child, index) {
     if (child.type !== Collapsible.type) { return child; }
+
     child = React.addons.cloneWithProps(child, {
       key: 'ddmCollapsible' + index,
       ref: 'ddmCollapsible' + index,
       index: index,
       open: child.props.open === null ? this.props.open : child.props.open,
-      onOpen: this.handleCollapsibleOpen
+      onOpen: this.getOnOpenMethod(child)
     });
 
     return child;
+  },
+
+  getOnOpenMethod: function(child) {
+    var group = this;
+
+    return function (collapsible) {
+      child.props.onOpen(collapsible);
+      group.handleCollapsibleOpen(collapsible);
+    }
   }
 
 });

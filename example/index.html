@@ -25,6 +25,10 @@
       <div id="react-example-1"></div>
     </div>
     <script type="text/jsx">
+    function logOpen() {
+      console.log('The collapsible opened and we heard about it despite being in a collapsible group!');
+    }
+
     React.render(
       <CollapsibleGroup className="my-collapsible-group">
         <Collapsible open={true} className="my-collapsible">
@@ -39,7 +43,7 @@
             </ul>
           </CollapsibleBody>
         </Collapsible>
-        <Collapsible>
+        <Collapsible onOpen={logOpen}>
           <CollapsibleHead>Hello World</CollapsibleHead>
           <CollapsibleBody>
             <ul>
