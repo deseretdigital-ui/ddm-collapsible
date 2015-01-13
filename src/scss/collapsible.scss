@@ -44,19 +44,26 @@
   text-align: center;
 
   &:before {
-    content: "\25b8";
+    background: url('../img/left-arrow.png') no-repeat center center;
     vertical-align: middle;
     display: block;
+    content: "";
+    height: 28px;
 
     .csstransforms & {
       transition: all .2s;
+      content: "\25b8";
+      height: auto;
+      background: none;
     }
 
     .ddm-collapsible--opening > .ddm-collapsible__head > &,
     .ddm-collapsible--open > .ddm-collapsible__head > & {
-      content: "\25be";
+      content: "";
+      background: url('../img/down-arrow.png') no-repeat center center;
 
       .csstransforms & {
+        background: none;
         content: "\25b8";
         transform: rotate(90deg); /* Opera */
       }
