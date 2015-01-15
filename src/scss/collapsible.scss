@@ -44,29 +44,40 @@
   text-align: center;
 
   &:before {
-    background: url('../img/left-arrow.png') no-repeat center center;
+    content: "\25b8";
     vertical-align: middle;
     display: block;
-    content: "";
-    height: 28px;
 
     .csstransforms & {
       transition: all .2s;
-      content: "\25b8";
-      height: auto;
-      background: none;
     }
 
     .ddm-collapsible--opening > .ddm-collapsible__head > &,
     .ddm-collapsible--open > .ddm-collapsible__head > & {
-      content: "";
-      background: url('../img/down-arrow.png') no-repeat center center;
+      content: "\25be";
 
       .csstransforms & {
-        background: none;
         content: "\25b8";
         transform: rotate(90deg); /* Opera */
       }
+    }
+  }
+  
+  /* IE8 arrow fallback */
+  &.ddm-collapsible__arrow--with-image {
+    background: url('../img/left-arrow.png') no-repeat center center;
+
+    .csstransforms & {
+      transition: all .2s;
+    }
+
+    &:before {
+      display: none;
+    }
+
+    .ddm-collapsible--opening > .ddm-collapsible__head > &,
+    .ddm-collapsible--open > .ddm-collapsible__head > & {
+      background: url('../img/down-arrow.png') no-repeat center center;
     }
   }
 }
