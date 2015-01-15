@@ -1,6 +1,7 @@
 var React = require('react/addons');
 var doesBrowserSupportCssTransforms = require('../util/doesBrowserSupportCssTransforms');
 var emptyFunction = require('../util/emptyFunction');
+var isIE8 = require('../util/isIE8');
 
 module.exports = React.createClass({ displayName: 'CollapsibleHead',
 
@@ -20,7 +21,7 @@ module.exports = React.createClass({ displayName: 'CollapsibleHead',
     return (
       <div className={this.getClasses()} onClick={this.props.onClick}>
         {this.renderChildren()}
-        <span className="ddm-collapsible__arrow"></span>
+        <span className={this.getArrowClasses()}></span>
       </div>
     );
   },
@@ -32,6 +33,18 @@ module.exports = React.createClass({ displayName: 'CollapsibleHead',
   getClasses: function () {
     var classes = {
       'ddm-collapsible__head': true
+    };
+
+    return [
+      React.addons.classSet(classes),
+      this.props.className
+    ].join(' ');
+  },
+
+  getArrowClasses: function () {
+    var classes = {
+      'ddm-collapsible__arrow': true,
+      'ddm-collapsible__arrow--with-image': isIE8()
     };
 
     return [

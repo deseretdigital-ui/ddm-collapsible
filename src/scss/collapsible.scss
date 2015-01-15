@@ -62,4 +62,22 @@
       }
     }
   }
+  
+  /* IE8 arrow fallback */
+  &.ddm-collapsible__arrow--with-image {
+    background: url('../img/left-arrow.png') no-repeat center center;
+
+    .csstransforms & {
+      transition: all .2s;
+    }
+
+    &:before {
+      display: none;
+    }
+
+    .ddm-collapsible--opening > .ddm-collapsible__head > &,
+    .ddm-collapsible--open > .ddm-collapsible__head > & {
+      background: url('../img/down-arrow.png') no-repeat center center;
+    }
+  }
 }

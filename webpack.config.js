@@ -15,7 +15,8 @@ module.exports = {
           'autoprefixer-loader?{browsers:["last 2 version", "> 1%", "ie 8"]}',
           'sass-loader'
         ]
-      }
+      },
+      { test: /\.(png|jpg)$/, loader: 'url-loader'}
     ]
   },
   externals: {
