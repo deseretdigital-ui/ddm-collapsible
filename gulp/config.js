@@ -5,7 +5,7 @@ var webpackSettings = require('../webpack.config.js');
 
 module.exports = {
   build: {
-    tasks: ['webpack']
+    tasks: ['webpack', 'bower']
   },
   ghpages: {
     src: example + '/**/*'
