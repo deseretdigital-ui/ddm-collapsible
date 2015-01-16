@@ -35,22 +35,16 @@ module.exports = React.createClass({ displayName: 'CollapsibleHead',
       'ddm-collapsible__head': true
     };
 
-    return [
-      React.addons.classSet(classes),
-      this.props.className
-    ].join(' ');
+    return React.addons.classSet(classes) + ' ' + this.props.className;
   },
 
   getArrowClasses: function () {
     var classes = {
       'ddm-collapsible__arrow': true,
-      'ddm-collapsible__arrow--with-image': isIE8()
+      'ddm-collapsible__arrow--with-image': isIE8
     };
 
-    return [
-      React.addons.classSet(classes),
-      this.props.className
-    ].join(' ');
+    return React.addons.classSet(classes) + ' ' + this.props.className;
   },
 
   renderChildren: function () {

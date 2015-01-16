@@ -62,14 +62,10 @@
       }
     }
   }
-  
-  /* IE8 arrow fallback */
-  &.ddm-collapsible__arrow--with-image {
-    background: url('../img/left-arrow.png') no-repeat center center;
 
-    .csstransforms & {
-      transition: all .2s;
-    }
+  /* IE8 arrow fallback */
+  &--with-image {
+    background: url('../img/left-arrow.png') no-repeat center center;
 
     &:before {
       display: none;
