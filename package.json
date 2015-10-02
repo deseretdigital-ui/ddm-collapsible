@@ -30,7 +30,7 @@
     "webpack": "^1.4.15"
   },
   "peerDependencies": {
-    "react": "^0.12"
+    "react": ">=0.12.0 <0.14.0"
   },
   "main": "dist/collapsible.js",
   "directories": {
