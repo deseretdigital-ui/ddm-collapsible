@@ -1,4 +1,6 @@
-var React = require('react/addons');
+var React = require('react');
+var ReactDOM = require('react-dom');
+var cx = require('classnames');
 var CollapsibleHead = require('./CollapsibleHead');
 var CollapsibleBody = require('./CollapsibleBody');
 var Transitions = require('transition-helpers');
@@ -31,6 +33,7 @@ module.exports = React.createClass({ displayName: 'Collapsible',
   },
 
   render: function () {
+
     return (
       <div className={this.getClassNames()}>
         {this.renderChildren()}
@@ -50,7 +53,7 @@ module.exports = React.createClass({ displayName: 'Collapsible',
     };
 
     return [
-      React.addons.classSet(classes),
+      cx(classes),
       this.props.className
     ].join(' ');
   },
@@ -60,9 +63,10 @@ module.exports = React.createClass({ displayName: 'Collapsible',
   },
 
   renderChild: function (child, index) {
-    if (child.type === CollapsibleHead.type) {
+
+    if (child.type === CollapsibleHead) {
       return this.renderHead(child);
-    } else if (child.type === CollapsibleBody.type) {
+    } else if (child.type === CollapsibleBody) {
       return this.renderBody(child);
     } else {
       return child;
@@ -70,14 +74,14 @@ module.exports = React.createClass({ displayName: 'Collapsible',
   },
 
   renderHead: function (child) {
-    return React.addons.cloneWithProps(child, {
+    return React.cloneElement(child, {
       ref: 'head',
       onClick: this.handleHeadClick
     });
   },
 
   renderBody: function (child) {
-    return React.addons.cloneWithProps(child, {
+    return React.cloneElement(child, {
       ref: 'body',
       key: 'body'
     });
@@ -114,7 +118,7 @@ module.exports = React.createClass({ displayName: 'Collapsible',
   },
 
   hasWillOpenClass: function () {
-    return this.hasClass(this.getDOMNode(), 'ddm-collapsible--will-open');
+    return this.hasClass(ReactDOM.findDOMNode(this), 'ddm-collapsible--will-open');
   },
 
   startOpen: function () {
@@ -127,7 +131,7 @@ module.exports = React.createClass({ displayName: 'Collapsible',
   },
 
   hasOpeningClass: function () {
-    return this.hasClass(this.getDOMNode(), 'ddm-collapsible--opening');
+    return this.hasClass(ReactDOM.findDOMNode(this), 'ddm-collapsible--opening');
   },
 
   finishOpen: function () {
@@ -138,7 +142,7 @@ module.exports = React.createClass({ displayName: 'Collapsible',
   },
 
   hasOpenClass: function () {
-    return this.hasClass(this.getDOMNode(), 'ddm-collapsible--open');
+    return this.hasClass(ReactDOM.findDOMNode(this), 'ddm-collapsible--open');
   },
 
   close: function (withTransition) {
@@ -180,7 +184,7 @@ module.exports = React.createClass({ displayName: 'Collapsible',
   },
 
   hasClosingClass: function () {
-    var hasClosingClass = this.hasClass(this.getDOMNode(), 'ddm-collapsible--closing');
+    var hasClosingClass = this.hasClass(ReactDOM.findDOMNode(this), 'ddm-collapsible--closing');
     return hasClosingClass;
   },
 

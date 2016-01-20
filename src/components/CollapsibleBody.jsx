@@ -1,4 +1,6 @@
-var React = require('react/addons');
+var React = require('react');
+var ReactDOM = require('react-dom');
+var cx = require('classnames');
 var Transitions = require('transition-helpers');
 
 module.exports = React.createClass({ displayName: 'CollapsibleBody',
@@ -27,29 +29,29 @@ module.exports = React.createClass({ displayName: 'CollapsibleBody',
     };
 
     return [
-      React.addons.classSet(classes),
+      cx(classes),
       this.props.className
     ].join(' ');
   },
 
   setHeight: function () {
-    this.getDOMNode().style.height = this.getContentHeight() + 'px';
+    ReactDOM.findDOMNode(this).style.height = this.getContentHeight() + 'px';
   },
 
   hasHeight: function () {
-    var height = this.getDOMNode().style.height;
+    var height = ReactDOM.findDOMNode(this).style.height;
     var contentHeight = this.getContentHeight() + 'px';
     var hasHeight = height === contentHeight;
     return hasHeight;
   },
 
   unsetHeight: function () {
-    this.getDOMNode().style.height = null;
+    ReactDOM.findDOMNode(this).style.height = null;
   },
 
   getContentHeight: function () {
     var height = 0;
-    var children = this.getDOMNode().children;
+    var children = ReactDOM.findDOMNode(this).children;
     var limit = children.length;
     for (var i = 0; i < limit; i++) {
       height += children[i].offsetHeight;
@@ -58,17 +60,17 @@ module.exports = React.createClass({ displayName: 'CollapsibleBody',
   },
 
   addTransitionEndHandler: function (handler) {
-    return Transitions.addEndEventListener(this.getDOMNode(), handler, 'height');
+    return Transitions.addEndEventListener(ReactDOM.findDOMNode(this), handler, 'height');
   },
 
   setTransitionDuration: function () {
     var contentHeight = this.getContentHeight();
     var duration = (contentHeight / this.props.speed).toFixed(2) + 's';
-    Transitions.setDuration(this.getDOMNode(), duration);
+    Transitions.setDuration(ReactDOM.findDOMNode(this), duration);
   },
 
   unsetTransitionDuration: function () {
-    Transitions.setDuration(this.getDOMNode(), null);
+    Transitions.setDuration(ReactDOM.findDOMNode(this), null);
   }
 
 });

@@ -1,4 +1,5 @@
-var React = require('react/addons');
+var React = require('react');
+var cx = require('classnames');
 var Collapsible = require('./Collapsible');
 
 module.exports = React.createClass({ displayName: 'CollapsibleGroup',
@@ -29,7 +30,7 @@ module.exports = React.createClass({ displayName: 'CollapsibleGroup',
     };
 
     return [
-      React.addons.classSet(classes),
+      cx(classes),
       this.props.className
     ].join(' ');
   },
@@ -66,7 +67,7 @@ module.exports = React.createClass({ displayName: 'CollapsibleGroup',
   renderChild: function (child, index) {
     if (child.type !== Collapsible.type) { return child; }
 
-    child = React.addons.cloneWithProps(child, {
+    child = React.cloneElement(child, {
       key: 'ddmCollapsible' + index,
       ref: 'ddmCollapsible' + index,
       index: index,
