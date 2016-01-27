@@ -44,7 +44,7 @@ module.exports = React.createClass({ displayName: 'CollapsibleGroup',
   close: function () {
     for (var key in this.refs) {
       var ref = this.refs[key];
-      var isCollapsible = ref.type !== Collapsible.type;
+      var isCollapsible = ref.type !== Collapsible;
       if (!isCollapsible) { continue; }
       ref.close();
     }
@@ -53,7 +53,7 @@ module.exports = React.createClass({ displayName: 'CollapsibleGroup',
   closeOtherCollapsibles: function (collapsible) {
     for (var key in this.refs) {
       var ref = this.refs[key];
-      var isCollapsible = ref.type !== Collapsible.type;
+      var isCollapsible = ref.type !== Collapsible;
       var isSame = ref.props.index === collapsible.props.index;
       if (!isCollapsible || isSame) { continue; }
       ref.close();
@@ -65,7 +65,7 @@ module.exports = React.createClass({ displayName: 'CollapsibleGroup',
   },
 
   renderChild: function (child, index) {
-    if (child.type !== Collapsible.type) { return child; }
+    if (child.type !== Collapsible) { return child; }
 
     child = React.cloneElement(child, {
       key: 'ddmCollapsible' + index,
